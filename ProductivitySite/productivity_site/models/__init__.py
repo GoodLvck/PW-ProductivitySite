@@ -6,3 +6,6 @@ from .plan import Plan
 from .subscription import Subscription
 from .summary import Summary
 from .podcast import Podcast
+from .fill_blanks import Fill_Blanks
+from .flashcard import Flashcard
+from .multioption import Multioption
