@@ -2,3 +2,7 @@ from .user import User
 from .subject import Subject
 from .free_time import Free_Time
 from .syllabus import  Syllabus
+from .plan import Plan
+from .subscription import Subscription
+from .summary import Summary
+from .podcast import Podcast
