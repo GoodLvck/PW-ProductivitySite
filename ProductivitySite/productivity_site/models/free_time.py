@@ -1,4 +1,6 @@
 from django.db import models
+from productivity_site.models import User
+
 
 class Free_Time(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

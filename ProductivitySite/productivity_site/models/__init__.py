@@ -9,3 +9,6 @@ from .podcast import Podcast
 from .priority import Priority
 from .task import Task
 from .subtask import Subtask
+from .fill_blanks import Fill_Blanks
+from .flashcard import Flashcard
+from .multioption import Multioption

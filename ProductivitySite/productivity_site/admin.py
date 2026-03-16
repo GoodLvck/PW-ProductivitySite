@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User, Free_Time, Plan, Subject, Summary, Syllabus, Priority, Task, Subtask
+from productivity_site.models import User, Free_Time, Plan, Subject, Summary, Syllabus, Fill_Blanks, Flashcard, Multioption, Priority, Task, Subtask
 
 admin.site.register(User)
 admin.site.register(Free_Time)
@@ -11,3 +11,6 @@ admin.site.register(Syllabus)
 admin.site.register(Priority)
 admin.site.register(Task)
 admin.site.register(Subtask)
+admin.site.register(Fill_Blanks)
+admin.site.register(Flashcard)
+admin.site.register(Multioption)
