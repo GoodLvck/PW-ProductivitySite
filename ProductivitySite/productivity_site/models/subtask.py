@@ -1,6 +1,6 @@
 from django.db import models
 
-from productivity_site.models import Priority
+from productivity_site.models.priority import Priority
 from productivity_site.models.task import Task
 
 class Subtask(models.Model):
