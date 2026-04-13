@@ -5,5 +5,5 @@ from . import views
 app_name = 'productivity_site'
 
 urlpatterns = [
-    # path('', views.home, name='home'),
+    path('', views.home, name='home'),
 ]
