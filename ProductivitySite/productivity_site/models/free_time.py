@@ -1,8 +1,8 @@
 from django.db import models
-from productivity_site.models import User
+from django.contrib.auth.models import User
 
 
-class Free_Time(models.Model):
+class FreeTime(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     monday = models.IntegerField(default=0)
     tuesday = models.IntegerField(default=0)

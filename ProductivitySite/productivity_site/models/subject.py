@@ -1,5 +1,5 @@
 from django.db import models
-from productivity_site.models import User
+from django.contrib.auth.models import User
 
 class Subject(models.Model):
     subject_id = models.IntegerField(primary_key=True)

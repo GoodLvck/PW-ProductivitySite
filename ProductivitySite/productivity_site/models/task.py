@@ -3,7 +3,6 @@ from django.db import models
 from productivity_site.models.subject import Subject
 from productivity_site.models.priority import Priority
 
-
 class Task(models.Model):
     task_id = models.IntegerField(primary_key=True)
     subject_id = models.ForeignKey(Subject, on_delete=models.CASCADE)
