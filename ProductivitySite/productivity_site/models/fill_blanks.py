@@ -1,7 +1,7 @@
 from django.db import models
 from productivity_site.models import Summary
 
-class Fill_Blanks(models.Model):
+class FillBlanks(models.Model):
     fill_blanks_id = models.IntegerField(primary_key=True)
     summary_id = models.ForeignKey(Summary, on_delete=models.CASCADE)
     text = models.TextField()
