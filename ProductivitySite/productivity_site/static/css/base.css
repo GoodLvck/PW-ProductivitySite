@@ -1,5 +1,5 @@
-@import "components/navbar/navbar.css";
-@import "components/button/button.css";
+@import "components/base.css";
+@import "registration/base.css";
 
 :root{
     --background: hsl(40 33% 95%); /* Fondo principal */
@@ -38,6 +38,9 @@ body {
     color: var(--foreground);
     font-family: var(--font-body), sans-serif;
     cursor: default;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {

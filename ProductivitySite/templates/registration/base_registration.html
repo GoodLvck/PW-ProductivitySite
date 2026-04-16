@@ -1,7 +1,32 @@
 {% extends "base.html" %}
 
 {% block templateBody %}
-{% include "components/navbar/registration.html" %}
-    {% block content %} {% endblock %}
+    {% include "components/navbar/registration.html" %}
 
+    <section class="auth-form-section">
+        <div class="auth-form-card">
+            <div class="form-header">
+                <h1 class="form-title">{{ form_title }}</h1>
+                <p class="form-subtitle">{{ form_subtitle }}</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                {% include "components/forms/_form_fields.html" %}
+                <button type="submit" class="button button-primary">{{ submit_label }}</button>
+            </form>
+
+            <div class="auth-footer">
+                {% block auth_footer %}{% endblock %}
+            </div>
+        </div>
+    </section>
 {% endblock templateBody %}
+
+{% comment %}
+{% extends "base.html" %}
+
+{% block templateBody %}
+    {% include "components/navbar/registration.html" %}
+    {% block content %} {% endblock %}
+{% endblock templateBody %}{% endcomment %}

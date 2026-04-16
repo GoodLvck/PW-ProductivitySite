@@ -10,14 +10,20 @@ a {
     height: inherit;
 }
 
+.button:hover {
+    outline: 0;
+}
+
 .button-primary {
     background-color: var(--primary);
     color: var(--primary-foreground);
+    border: none;
 }
 
 .button-secondary {
     color: var(--foreground);
     border: 1px solid var(--border);
+    background-color: inherit;
 }
 
 .button-secondary:hover {
