@@ -54,7 +54,9 @@
     z-index: 10;
 }
 
-.info-hint:hover .help-text {
+.info-hint:hover .help-text,
+.info-hint:focus .help-text,
+.info-hint:focus-within .help-text {
     opacity: 1;
     visibility: visible;
 }
