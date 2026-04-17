@@ -1,0 +1,62 @@
+.app-layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "sidebar navbar"
+        "sidebar main";
+    height: 100vh;
+}
+
+.app-sidebar {
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+}
+
+.app-navbar {
+    grid-area: navbar;
+    padding: .5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.app-navbar-buttons {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.app-navbar-button {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+
+    color: var(--muted-foreground);
+    background-color: inherit;
+    font-weight: lighter;
+}
+
+.app-navbar-button:hover {
+    color: var(--foreground);
+    background-color: var(--muted);
+}
+
+.app-navbar-button p{
+    margin: 0;
+}
+
+
+.app-main {
+    grid-area: main;
+    overflow-y: scroll;
+}
+
+i {
+    display: inline-flex;
+    align-content: center;
+}

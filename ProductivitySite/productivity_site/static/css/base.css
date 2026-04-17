@@ -1,6 +1,7 @@
 @import "components/base.css";
 @import "registration/base.css";
 @import "unauthorized/base.css";
+@import "private/base.css";
 
 :root{
     --background: hsl(40 33% 95%); /* Fondo principal */
@@ -19,6 +20,8 @@
     --font-heading: "Sora", "Trebuchet MS", sans-serif; /* Tipografia para titulos */
     --font-body: "Manrope", "Segoe UI", sans-serif; /* Tipografia para texto general */
     --navbar-height: 2.5rem;
+    --sidebar-width: 15rem;
+    --sidebar-collapsed-width: 5rem;
 }
 
 [data-theme="dark"]{

@@ -79,3 +79,7 @@ class SignUpView(CreateView):
         return context
 
 # ------------------ Change password page ------------------------
+
+# ------------------ Dashboard page ------------------------
+def dashboard(request):
+    return render(request, 'authorized/dashboard.html')
