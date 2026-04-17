@@ -1,7 +1,41 @@
+.study-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 3rem 0;
+}
+
+.study-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: start;
+    text-align: start;
+}
+
+.study-header .ai-study {
+    margin: 0;
+    color: var(--primary);
+}
+
+.study-header .study-title {
+    margin: 0;
+    font-size: xx-large;
+}
+
+.study-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
 .contact-card {
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
     align-items: center;
     justify-content: center;
+    padding-bottom: 30px;
 }
 .contact-card .contact-header {
     display: flex;
@@ -30,8 +64,21 @@
     padding: 0;
 }
 
+.contact-form {
+    width: 100%;
+    max-width: 900px;
+    background-color: hsl(0 0% 100%);
+    color: var(--foreground);
+    border-style: solid;
+    border-color: var(--border);
+    border-radius: 10px;
+    border-width: 1px;
+    box-shadow: 0 12px 32px hsl(150 10% 20% / 0.08);
+}
+
 .contact-form form {
     display: grid;
+    padding: 50px;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
         "nombre  mensaje"
@@ -41,6 +88,20 @@
     gap: 12px;
 }
 
+.contact-form .form-label {
+    color: var(--foreground);
+}
+
+.contact-form .form-field {
+    background-color: hsl(0 0% 100%);
+    color: var(--foreground);
+}
+
+.contact-form .form-field::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.7;
+}
+
 .contact-form .form-group:nth-of-type(1) { grid-area: nombre; }
 .contact-form .form-group:nth-of-type(2) { grid-area: email; }
 .contact-form .form-group:nth-of-type(3) { grid-area: asunto; }
@@ -48,6 +109,7 @@
 
 .contact-form .form-group:nth-of-type(4) textarea {
     height: 100%;
+    min-height: 150px;
     resize: none;
     box-sizing: border-box;
 }
