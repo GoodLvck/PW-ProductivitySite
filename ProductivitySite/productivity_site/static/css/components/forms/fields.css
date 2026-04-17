@@ -1,0 +1,60 @@
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    grid-column: span 2;
+}
+
+.form-group:has(.field-sm){
+    grid-column: span 1;
+}
+
+.form-field {
+    background-color: inherit;
+    color: inherit;
+    padding: .5rem;
+    outline: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.auth-form-card input::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.7;
+}
+
+.info-hint {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: .5rem;
+    color: var(--primary);
+    cursor: help;
+}
+
+.info-hint .help-text {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + .5rem);
+    transform: translateY(-50%);
+    min-width: 16rem;
+    max-width: 20rem;
+    padding: .5rem .75rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: var(--card);
+    color: var(--foreground);
+    font-size: .85rem;
+    line-height: 1.4;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.info-hint:hover .help-text {
+    opacity: 1;
+    visibility: visible;
+}

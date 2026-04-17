@@ -62,7 +62,6 @@ class CustomRegisterForm(UserCreationForm):
 
         return user
 
-
 class SignUpView(CreateView):
     """Register view."""
     form_class = CustomRegisterForm

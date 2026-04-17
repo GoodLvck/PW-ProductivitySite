@@ -1,5 +1,6 @@
 @import "components/base.css";
 @import "registration/base.css";
+@import "unauthorized/base.css";
 
 :root{
     --background: hsl(40 33% 95%); /* Fondo principal */
