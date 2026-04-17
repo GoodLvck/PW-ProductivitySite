@@ -22,7 +22,20 @@
 
     <!-- Contact -->
     <section id="contact">
-        <h2>Contact</h2>
+        <div class="contact-card">
+            <div class="contact-header">
+                <p class="contact">CONTACT</p>
+                <h2 class="contact-question">Do you have any question?</h2>
+                <p class="contact-subtitle">Tell us and we will reply ASAP!</p>
+            </div>
+            <div class="contact-form">
+                <form method="post">
+                    {% csrf_token %}
+                    {% include "components/forms/_form_fields.html" %}
+                    {% include "components/button/base-link-button.html" with href="/contact" text="Send" button_type="button-primary" icon_right="fi-rr-paper-plane" %}
+                </form>
+            </div>
+        </div>
     </section>
 
     <!-- Footer -->
