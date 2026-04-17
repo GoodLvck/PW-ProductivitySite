@@ -9,10 +9,12 @@ from django.urls import reverse_lazy
 
 # Create your views here.
 
+# ------------------ Landing page ------------------------
 def home(request):
     """Home page view."""
     return render(request, 'unauthorized/landing/home.html')
 
+# ------------------ Log in page ------------------------
 class CustomLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,6 +32,7 @@ class CustomLoginView(LoginView):
         context["submit_label"] = "Log in"
         return context
 
+# ------------------ Register page ------------------------
 class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField()
@@ -62,7 +65,6 @@ class CustomRegisterForm(UserCreationForm):
 
         return user
 
-
 class SignUpView(CreateView):
     """Register view."""
     form_class = CustomRegisterForm
@@ -75,3 +77,5 @@ class SignUpView(CreateView):
         context["form_subtitle"] = "Create your ZenOrbit account"
         context["submit_label"] = "Create account"
         return context
+
+# ------------------ Change password page ------------------------

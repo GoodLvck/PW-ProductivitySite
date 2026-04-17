@@ -1,8 +1,32 @@
 {% extends "unauthorized/base_unauthorized.html" %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
-{% block content %}  <!-- fill the content block -->
-    <h1 >Welcome to Home</h1>
-    <p>This is the home page of our Django project.</p>
+{% block content %}
+    <!-- BANNER -->
+    <section id="banner">
+        <h1>Welcome to Home</h1>
+        <p>This is the home page of our Django project.</p>
+    </section>
+
+    <!-- Productivity -->
+    <section id="productivity">
+        <h2>Productivity</h2>
+    </section>
+
+    <!-- Study -->
+    <section id="ai-study">
+        <h2>AI Study</h2>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <h2>Contact</h2>
+    </section>
+
+    <!-- Footer -->
+    <section id="footer">
+        {% include "components/footer/footer.html" %}
+    </section>
 {% endblock %}

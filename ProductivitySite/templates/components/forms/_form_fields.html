@@ -3,9 +3,9 @@
         <label for="{{ field.id_for_label }}" class="form-label">
             {{ field.label }}
             {% if field.help_text %}
-            <span class="info-hint tooltip" tabindex="0" aria-label="More information">
+            <span class="info-hint" tabindex="0" aria-label="More information">
                 <i class="fi fi-rr-info"></i>
-                <small class="help-text tooltip-text">{{ field.help_text }}</small>
+                <small class="help-text">{{ field.help_text }}</small>
             </span>
             {% endif %}
         </label>
