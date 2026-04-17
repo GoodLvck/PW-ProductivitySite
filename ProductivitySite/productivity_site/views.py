@@ -99,32 +99,32 @@ class SignUpView(CreateView):
 
 
 # ------------------ Dashboard page ------------------------
-@login_required(login_url="/accounts/login/")
+@login_required
 def dashboard(request):
     return render(request, 'authorized/dashboard.html')
 
 # ------------------ Calendar page ------------------------
-@login_required(login_url="/accounts/login/")
+@login_required
 def calendar(request):
     return render(request, 'authorized/calendar.html')
 
 # ------------------ Subjects page ------------------------
-@login_required(login_url="/accounts/login/")
+@login_required
 def subjects(request):
     return render(request, 'authorized/subjects.html')
 
 # ------------------ Productivity page ------------------------
-@login_required(login_url="/accounts/login/")
+@login_required
 def productivity(request):
     return render(request, 'authorized/productivity.html')
 
 # ------------------ Profile page ------------------------
-@login_required(login_url="/accounts/login/")
+@login_required
 def profile(request):
     return render(request, 'authorized/profile.html')
 
 # ------------------ Logout route ------------------------
-@login_required(login_url="/accounts/login/")
+@login_required
 def logout_view(request):
     logout(request)
     return redirect("productivity_site:home")
