@@ -47,10 +47,6 @@
     color: var(--primary);
 }
 
-.sidebar-item .is-active {
-    background-color: red;
-}
-
 .sidebar-item:hover,
 .sidebar-item:focus,
 .sidebar-item.is-active{
