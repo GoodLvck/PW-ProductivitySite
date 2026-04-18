@@ -51,19 +51,6 @@
     gap: 1rem;
 }
 
-.auth-form-card input[type="text"],
-.auth-form-card input[type="password"],
-.auth-form-card input[type="email"] {
-    background-color: inherit;
-    color: inherit;
-    padding: .5rem;
-    outline: none;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    box-sizing: border-box;
-    width: 100%;
-}
-
 .auth-form-card .auth-footer{
     font-weight: lighter;
     display: flex;

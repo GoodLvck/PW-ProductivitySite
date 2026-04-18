@@ -9,9 +9,9 @@
     grid-column: span 1;
 }
 
-.form-field {
-    background-color: inherit;
-    color: inherit;
+.form-group input,
+.form-group textarea {
+    background-color: var(--background);
     padding: .5rem;
     outline: none;
     border: 1px solid var(--border);
@@ -20,7 +20,8 @@
     width: 100%;
 }
 
-.auth-form-card input::placeholder {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
     color: var(--muted-foreground);
     opacity: 0.7;
 }

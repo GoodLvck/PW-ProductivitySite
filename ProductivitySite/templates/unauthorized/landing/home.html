@@ -4,51 +4,55 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <!-- BANNER -->
-    <section id="banner">
-        <h1>Welcome to Home</h1>
-        <p>This is the home page of our Django project.</p>
-    </section>
+    <div class="home-layout">
+        <!-- BANNER -->
+        <section id="banner">
+            <h1>Welcome to Home</h1>
+            <p>This is the home page of our Django project.</p>
+        </section>
 
-    <!-- Productivity -->
-    <section id="productivity">
-        <h2>Productivity</h2>
-    </section>
+        <!-- Productivity -->
+        <section id="productivity">
+            <h2>Productivity</h2>
+        </section>
 
-    <!-- Study -->
-    <section id="ai-study">
-        <div class="study-card">
-            <div class="study-header">
-                <p class="ai-study">AI STUDY</p>
-                <h2 class="study-title">Study boosted with AI</h2>
-            </div>
-            <div class="study-grid">
-                {% include "components/card/feature-card.html" with icon_class="fi-rs-book-alt" title="Smart Summaries" description="Generate smart summaries from your syllabus." %}
-                {% include "components/card/feature-card.html" with icon_class="fi-ts-book-brain" title="Flashcards" description="AI-generated review cards that adapt to your level." %}
-                {% include "components/card/feature-card.html" with icon_class="fi-rr-interrogation" title="Multioption & Fill Blanks" description="Multi-option and fill in spaces to test your knowledge." %}
-                {% include "components/card/feature-card.html" with icon_class="fi-br-star-microphone" title="Podcast" description="Turn your notes into podcasts to learn by listening." %}
+        <!-- Study -->
+        <section id="ai-study">
+            <div class="study-card">
+                <div class="study-header">
+                    <p class="ai-study">AI STUDY</p>
+                    <h2 class="study-title">Study boosted with AI</h2>
+                </div>
+                <div class="study-grid">
+                    {% include "components/card/feature-card.html" with icon_class="fi-rs-book-alt" title="Smart Summaries" description="Generate smart summaries from your syllabus." %}
+                    {% include "components/card/feature-card.html" with icon_class="fi-ts-book-brain" title="Flashcards" description="AI-generated review cards that adapt to your level." %}
+                    {% include "components/card/feature-card.html" with icon_class="fi-rr-interrogation" title="Multioption & Fill Blanks" description="Multi-option and fill in spaces to test your knowledge." %}
+                    {% include "components/card/feature-card.html" with icon_class="fi-br-star-microphone" title="Podcast" description="Turn your notes into podcasts to learn by listening." %}
 
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Contact -->
-    <section id="contact">
-        <div class="contact-card">
-            <div class="contact-header">
-                <p class="contact">CONTACT</p>
-                <h2 class="contact-question">Do you have any question?</h2>
-                <p class="contact-subtitle">Tell us and we will reply ASAP!</p>
+        <!-- Contact -->
+        <section id="contact">
+            <div class="contact-layout">
+                <div class="section-header">
+                    <span class="section-badge">CONTACT</span>
+                    <h2 class="section-title">Do you have any question?</h2>
+                    <p class="section-subtitle">Tell us and we will reply ASAP!</p>
+                </div>
+                <div class="contact-form">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div id="contact-fields">
+                            {% include "components/forms/_form_fields.html" %}
+                        </div>
+                        {% include "components/button/base-link-button.html" with href="/contact" text="Send" button_type="button-primary" icon_right="fi-rr-paper-plane" %}
+                    </form>
+                </div>
             </div>
-            <div class="contact-form">
-                <form method="post">
-                    {% csrf_token %}
-                    {% include "components/forms/_form_fields.html" %}
-                    {% include "components/button/base-link-button.html" with href="/contact" text="Send" button_type="button-primary" icon_right="fi-rr-paper-plane" %}
-                </form>
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <!-- Footer -->
     <section id="footer">
