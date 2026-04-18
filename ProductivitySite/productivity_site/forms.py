@@ -22,3 +22,8 @@ class ContactForm(forms.Form):
             attrs={"placeholder": "Your message...", "class": "form-field"}
         )
     )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+        return email
+
