@@ -1,7 +1,9 @@
 from django import forms
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -15,6 +17,9 @@ from django.conf import settings
 # ------------------ Landing page ------------------------
 def home(request):
     """Home page view."""
+    if request.user.is_authenticated:
+        return redirect('productivity_site:dashboard')
+
     return render(request, 'unauthorized/landing/home.html')
 
 # ------------------ Log in page ------------------------
@@ -27,6 +32,12 @@ class CustomLoginForm(AuthenticationForm):
 class CustomLoginView(LoginView):
     template_name = "registration/login.html"
     authentication_form = CustomLoginForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("productivity_site:dashboard")
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,6 +85,12 @@ class SignUpView(CreateView):
     template_name = 'registration/signup.html'
     success_url = reverse_lazy('login')
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("productivity_site:dashboard")
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Sign Up"
@@ -104,3 +121,38 @@ class ContactView(FormView):
             recipient_list=[settings.NOTIFY_EMAIL],
         )
         return super().form_valid(form)
+# ------------------ Change password page ------------------------
+
+
+# ------------------ Dashboard page ------------------------
+@login_required
+def dashboard(request):
+    return render(request, 'authorized/dashboard.html')
+
+# ------------------ Calendar page ------------------------
+@login_required
+def calendar(request):
+    return render(request, 'authorized/calendar.html')
+
+# ------------------ Subjects page ------------------------
+@login_required
+def subjects(request):
+    return render(request, 'authorized/subjects.html')
+
+# ------------------ Productivity page ------------------------
+@login_required
+def productivity(request):
+    return render(request, 'authorized/productivity.html')
+
+# ------------------ Profile page ------------------------
+@login_required
+def profile(request):
+    return render(request, 'authorized/profile.html')
+
+# ------------------ Logout route ------------------------
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("productivity_site:home")
+
+
