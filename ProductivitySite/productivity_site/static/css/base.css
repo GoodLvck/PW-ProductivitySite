@@ -7,6 +7,9 @@
     --background: hsl(40 33% 95%); /* Fondo principal */
     --foreground: hsl(150 10% 20%); /* Texto principal */
     --card: hsl(40 30% 97%); /* Fondo de tarjetas */
+    --card-foreground: hsl(150 10% 20%);
+    --card-shadow: 0 4px 24px -4px hsl(130 14% 54% / .12);
+    --card-shadow-hover: 0 8px 32px -4px hsl(130 14% 54% / .2);
     --primary: hsl(130 14% 54%); /*Color primario (sage)*/
     --primary-foreground: hsl(40 33% 97%); /* Texto sobre primario */
     --secondary: hsl(100 22% 85%);	/* Color secundario */
@@ -14,9 +17,13 @@
     --muted: hsl(100 18% 88%); /* Superficies atenuadas */
     --muted-foreground: hsl(150 8% 45%); /* Texto atenuado */
     --accent: hsl(130 14% 46%); /* Color de acento */
+    --accent-foreground: hsl(40 33% 97%);
     --destructive: hsl(0 60% 50%); /* Color destructivo/error */
+    --destructive-foreground: hsl(0 0% 100%);
     --border: hsl(100 15% 82%);	/* Bordes */
     --ring: hsl(130 14% 54%); /* Anillo de focus */
+    --radius: .75rem;
+    --surface-glass: hsl(40 30% 97% / .7);
     --font-heading: "Sora", "Trebuchet MS", sans-serif; /* Tipografia para titulos */
     --font-body: "Manrope", "Segoe UI", sans-serif; /* Tipografia para texto general */
     --navbar-height: 2.5rem;

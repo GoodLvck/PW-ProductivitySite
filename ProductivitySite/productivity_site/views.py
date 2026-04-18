@@ -2,13 +2,16 @@ from django import forms
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.views.generic import CreateView
+from django.views.generic import CreateView, FormView
 from django.urls import reverse_lazy
 
+from .forms import ContactForm
+from django.conf import settings
 # Create your views here.
 
 # ------------------ Landing page ------------------------
@@ -95,6 +98,29 @@ class SignUpView(CreateView):
         context["submit_label"] = "Create account"
         return context
 
+# ------------------ Landing page ------------------------
+class ContactView(FormView):
+    form_class = ContactForm
+    template_name = "unauthorized/landing/home.html"
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        email = form.cleaned_data["email"]
+        subject = form.cleaned_data["subject"]
+        message = form.cleaned_data["message"]
+
+        full_message = (
+            f"Received message below from {email}, {subject}\n"
+            f"________________________\n\n"
+            f"{message}"
+        )
+        send_mail(
+            subject="Received contact form submission",
+            message=full_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.NOTIFY_EMAIL],
+        )
+        return super().form_valid(form)
 # ------------------ Change password page ------------------------
 
 

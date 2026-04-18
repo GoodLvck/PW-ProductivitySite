@@ -1,0 +1,10 @@
+<article class="feature-card{% if extra_classes %} {{ extra_classes }}{% endif %}">
+    <div class="feature-card-icon" aria-hidden="true">
+        {% if icon_class %}
+        <i class="fi {{ icon_class }}"></i>
+        {% endif %}
+    </div>
+
+    <h3 class="feature-card-title">{{ title }}</h3>
+    <p class="feature-card-description">{{ description }}</p>
+</article>
