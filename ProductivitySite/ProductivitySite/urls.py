@@ -21,7 +21,7 @@ from productivity_site.views import SignUpView, CustomLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/login/', CustomLoginView.as_view(), name='signup'),
+    path('accounts/login/', CustomLoginView.as_view(), name='login'),
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('productivity_site.urls')),
