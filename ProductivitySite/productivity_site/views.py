@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.core.mail import BadHeaderError
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -35,16 +36,26 @@ def home(request):
                 f"Message:\n{message}"
             )
 
-            send_mail(
-                subject=f"[ZenOrbit Contact] {subject}",
-                message=full_message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.NOTIFY_EMAIL],
-            )
-
-            messages.success(request, "Your message has been sent successfully.")
-
-            return redirect('productivity_site:home')
+            try:
+                send_mail(
+                    subject=f"[ZenOrbit Contact] {subject}",
+                    message=full_message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.NOTIFY_EMAIL],
+                )
+            except BadHeaderError:
+                messages.error(
+                    request,
+                    "The message could not be sent because the headers are invalid.",
+                )
+            except Exception:
+                messages.error(
+                    request,
+                    "We could not send your message right now. Please try again later.",
+                )
+            else:
+                messages.success(request, "Your message has been sent successfully.")
+                return redirect('productivity_site:home')
     else:
         form = ContactForm()
 
@@ -161,5 +172,4 @@ def profile(request):
 def logout_view(request):
     logout(request)
     return redirect("productivity_site:home")
-
 

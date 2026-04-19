@@ -13,20 +13,69 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def load_env_file(path):
+    if not path.exists():
+        return
+
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+
+        name, value = line.split('=', 1)
+        name = name.strip()
+        value = value.strip().strip('"').strip("'")
+
+        os.environ.setdefault(name, value)
+
+
+load_env_file(BASE_DIR.parent / '.env')
+load_env_file(BASE_DIR / '.env')
+
+
+def get_env(name, default=None, *, required=False):
+    value = os.getenv(name, default)
+    if required and (value is None or value == ''):
+        raise ImproperlyConfigured(f'Set the {name} environment variable.')
+    return value
+
+
+def get_bool_env(name, default=False):
+    value = get_env(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {'1', 'true', 'yes', 'on'}
+
+
+def get_list_env(name, default=''):
+    value = get_env(name, default)
+    return [item.strip() for item in value.split(',') if item.strip()]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a4_ulalqc(%=*v@5c-hah0_@tl8*^#-^dp4e9jrm+1g_i)q16z'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = get_bool_env('DJANGO_DEBUG', default=False)
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = get_env(
+    'DJANGO_SECRET_KEY',
+    default='django-insecure-dev-only-key' if DEBUG else None,
+    required=not DEBUG,
+)
+
+ALLOWED_HOSTS = get_list_env(
+    'DJANGO_ALLOWED_HOSTS',
+    'localhost,127.0.0.1' if DEBUG else '',
+)
 
 
 # Application definition
@@ -78,7 +127,7 @@ WSGI_APPLICATION = 'ProductivitySite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.getenv('SQLITE_PATH', str(BASE_DIR / 'db.sqlite3')),
+        'NAME': get_env('SQLITE_PATH', str(BASE_DIR / 'db.sqlite3')),
     }
 }
 
@@ -105,22 +154,36 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = get_env('DJANGO_LANGUAGE_CODE', 'en-us')
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = get_env('DJANGO_TIME_ZONE', 'UTC')
 
-USE_I18N = True
+USE_I18N = get_bool_env('DJANGO_USE_I18N', default=True)
 
-USE_TZ = True
+USE_TZ = get_bool_env('DJANGO_USE_TZ', default=True)
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = get_env('DJANGO_STATIC_URL', '/static/')
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = get_env('DJANGO_LOGIN_REDIRECT_URL', '/')
+LOGOUT_REDIRECT_URL = get_env('DJANGO_LOGOUT_REDIRECT_URL', '/')
 
-DEFAULT_FROM_EMAIL = "no-reply@zenorbit.com"
-NOTIFY_EMAIL = "asp46@alumnes.udl.cat"
+DEFAULT_FROM_EMAIL = get_env('DJANGO_DEFAULT_FROM_EMAIL', 'no-reply@localhost')
+NOTIFY_EMAIL = get_env('DJANGO_NOTIFY_EMAIL', 'admin@localhost')
+
+EMAIL_BACKEND = get_env(
+    'DJANGO_EMAIL_BACKEND',
+    'django.core.mail.backends.console.EmailBackend'
+    if DEBUG
+    else 'django.core.mail.backends.smtp.EmailBackend',
+)
+EMAIL_HOST = get_env('DJANGO_EMAIL_HOST', '')
+EMAIL_PORT = int(get_env('DJANGO_EMAIL_PORT', '587'))
+EMAIL_HOST_USER = get_env('DJANGO_EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = get_env('DJANGO_EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = get_bool_env('DJANGO_EMAIL_USE_TLS', default=True)
+EMAIL_USE_SSL = get_bool_env('DJANGO_EMAIL_USE_SSL', default=False)
+EMAIL_TIMEOUT = int(get_env('DJANGO_EMAIL_TIMEOUT', '10'))
