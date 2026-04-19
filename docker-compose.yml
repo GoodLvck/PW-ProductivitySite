@@ -17,7 +17,7 @@ services:
       DJANGO_LOGOUT_REDIRECT_URL: ${DJANGO_LOGOUT_REDIRECT_URL:-/}
       DJANGO_DEFAULT_FROM_EMAIL: ${DJANGO_DEFAULT_FROM_EMAIL:-no-reply@localhost}
       DJANGO_NOTIFY_EMAIL: ${DJANGO_NOTIFY_EMAIL:-admin@localhost}
-      SQLITE_PATH: ${SQLITE_PATH:-/data/db.sqlite3}
+      SQLITE_PATH: /data/db.sqlite3
     ports:
       - "${APP_PORT:-8080}:8000"
     volumes:

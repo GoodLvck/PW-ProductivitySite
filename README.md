@@ -38,10 +38,62 @@ Variables principales:
 - `DJANGO_LOGOUT_REDIRECT_URL`: ruta de redireccion tras logout
 - `DJANGO_DEFAULT_FROM_EMAIL`: email remitente por defecto
 - `DJANGO_NOTIFY_EMAIL`: email de notificaciones
+- `DJANGO_EMAIL_BACKEND`: backend de correo de Django
+- `DJANGO_EMAIL_HOST`: servidor SMTP
+- `DJANGO_EMAIL_PORT`: puerto SMTP
+- `DJANGO_EMAIL_HOST_USER`: usuario SMTP
+- `DJANGO_EMAIL_HOST_PASSWORD`: contrasena SMTP
+- `DJANGO_EMAIL_USE_TLS`: activa TLS para SMTP
+- `DJANGO_EMAIL_USE_SSL`: activa SSL para SMTP
+- `DJANGO_EMAIL_TIMEOUT`: tiempo maximo de espera al conectar con SMTP
 - `SQLITE_PATH`: ruta al fichero SQLite
 - `APP_PORT`: puerto publicado por Docker Compose
 
 Para desarrollo puedes crear un fichero `.env` en la raiz del repositorio tomando como referencia `.env.example`.
+Cuando ejecutes Django en local, `SQLITE_PATH` debe apuntar a una ruta valida y escribible en tu maquina. En Docker Compose esa ruta se sobreescribe automaticamente a `/data/db.sqlite3`.
+
+## Configuracion del correo de contacto
+
+El formulario de contacto de la landing usa `send_mail()` de Django. La configuracion del envio se hace por variables de entorno.
+
+En desarrollo, el valor recomendado es:
+
+```env
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+```
+
+Con ese backend, Django no envia correos reales: imprime el contenido del email en la salida de la aplicacion o en los logs del contenedor. Es la forma mas simple de probar que el formulario funciona.
+
+Para usar un servidor SMTP real, cambia el backend y define las credenciales:
+
+```env
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DJANGO_EMAIL_HOST=smtp.example.com
+DJANGO_EMAIL_PORT=587
+DJANGO_EMAIL_HOST_USER=your-account@example.com
+DJANGO_EMAIL_HOST_PASSWORD=your-smtp-password
+DJANGO_EMAIL_USE_TLS=true
+DJANGO_EMAIL_USE_SSL=false
+DJANGO_EMAIL_TIMEOUT=10
+DJANGO_DEFAULT_FROM_EMAIL=your-account@example.com
+DJANGO_NOTIFY_EMAIL=contact@example.com
+```
+
+Ejemplo comun con Gmail:
+
+```env
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DJANGO_EMAIL_HOST=smtp.gmail.com
+DJANGO_EMAIL_PORT=587
+DJANGO_EMAIL_HOST_USER=your-account@gmail.com
+DJANGO_EMAIL_HOST_PASSWORD=your-app-password
+DJANGO_EMAIL_USE_TLS=true
+DJANGO_EMAIL_USE_SSL=false
+DJANGO_DEFAULT_FROM_EMAIL=your-account@gmail.com
+DJANGO_NOTIFY_EMAIL=your-account@gmail.com
+```
+
+Si usas Gmail, debes generar una app password y no reutilizar tu contrasena normal.
 
 ## Ejecucion en local
 
@@ -64,14 +116,13 @@ source .venv/bin/activate
 pip install .
 ```
 
-4. Exporta las variables necesarias. Ejemplo minimo para desarrollo:
+4. Crea tu fichero `.env` a partir de `.env.example` y ajusta los valores que necesites.
 
 ```bash
-export DJANGO_DEBUG=true
-export DJANGO_SECRET_KEY=dev-secret-key
-export DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
-export SQLITE_PATH=$(pwd)/db.sqlite3
+cp .env.example .env
 ```
+
+El proyecto carga automaticamente el fichero `.env` tanto en ejecucion local como con Docker Compose. Para desarrollo local, revisa especialmente `DJANGO_SECRET_KEY` y `SQLITE_PATH`.
 
 5. Ejecuta migraciones:
 
@@ -107,6 +158,7 @@ Detalles del despliegue en Docker:
 - Durante la build se instalan `pip`, `setuptools` y `wheel`, y despues las dependencias del proyecto desde `pyproject.toml`
 - Al arrancar, ejecuta `python manage.py migrate`
 - La base de datos SQLite se persiste en un volumen Docker usando `SQLITE_PATH=/data/db.sqlite3`
+- Si `DJANGO_EMAIL_BACKEND` usa el backend de consola, los mensajes del formulario de contacto apareceran en `docker compose logs`
 
 Para detener los contenedores:
 

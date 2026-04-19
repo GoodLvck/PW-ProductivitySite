@@ -19,6 +19,26 @@ from django.core.exceptions import ImproperlyConfigured
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def load_env_file(path):
+    if not path.exists():
+        return
+
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+
+        name, value = line.split('=', 1)
+        name = name.strip()
+        value = value.strip().strip('"').strip("'")
+
+        os.environ.setdefault(name, value)
+
+
+load_env_file(BASE_DIR.parent / '.env')
+load_env_file(BASE_DIR / '.env')
+
+
 def get_env(name, default=None, *, required=False):
     value = os.getenv(name, default)
     if required and (value is None or value == ''):
@@ -107,7 +127,7 @@ WSGI_APPLICATION = 'ProductivitySite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.getenv('SQLITE_PATH', str(BASE_DIR / 'db.sqlite3')),
+        'NAME': get_env('SQLITE_PATH', str(BASE_DIR / 'db.sqlite3')),
     }
 }
 
@@ -153,3 +173,17 @@ LOGOUT_REDIRECT_URL = get_env('DJANGO_LOGOUT_REDIRECT_URL', '/')
 
 DEFAULT_FROM_EMAIL = get_env('DJANGO_DEFAULT_FROM_EMAIL', 'no-reply@localhost')
 NOTIFY_EMAIL = get_env('DJANGO_NOTIFY_EMAIL', 'admin@localhost')
+
+EMAIL_BACKEND = get_env(
+    'DJANGO_EMAIL_BACKEND',
+    'django.core.mail.backends.console.EmailBackend'
+    if DEBUG
+    else 'django.core.mail.backends.smtp.EmailBackend',
+)
+EMAIL_HOST = get_env('DJANGO_EMAIL_HOST', '')
+EMAIL_PORT = int(get_env('DJANGO_EMAIL_PORT', '587'))
+EMAIL_HOST_USER = get_env('DJANGO_EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = get_env('DJANGO_EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = get_bool_env('DJANGO_EMAIL_USE_TLS', default=True)
+EMAIL_USE_SSL = get_bool_env('DJANGO_EMAIL_USE_SSL', default=False)
+EMAIL_TIMEOUT = int(get_env('DJANGO_EMAIL_TIMEOUT', '10'))
