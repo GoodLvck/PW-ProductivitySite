@@ -1,0 +1,16 @@
+services:
+  web:
+    build:
+      context: ./ProductivitySite
+      dockerfile: Dockerfile
+    container_name: productivitysite-web
+    environment:
+      SQLITE_PATH: /data/db.sqlite3
+    ports:
+      - "8080:8000"
+    volumes:
+      - productivitysite_data:/data
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  productivitysite_data:
