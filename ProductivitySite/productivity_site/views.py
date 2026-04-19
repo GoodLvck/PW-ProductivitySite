@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
@@ -12,15 +13,44 @@ from django.urls import reverse_lazy
 
 from .forms import ContactForm
 from django.conf import settings
-# Create your views here.
 
 # ------------------ Landing page ------------------------
 def home(request):
-    """Home page view."""
     if request.user.is_authenticated:
         return redirect('productivity_site:dashboard')
 
-    return render(request, 'unauthorized/landing/home.html')
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
+            subject = form.cleaned_data["subject"]
+            message = form.cleaned_data["message"]
+
+            full_message = (
+                f"New contact form submission\n\n"
+                f"Name: {name}\n"
+                f"Email: {email}\n"
+                f"Subject: {subject}\n\n"
+                f"Message:\n{message}"
+            )
+
+            send_mail(
+                subject=f"[ZenOrbit Contact] {subject}",
+                message=full_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.NOTIFY_EMAIL],
+            )
+
+            messages.success(request, "Your message has been sent successfully.")
+
+            return redirect('productivity_site:home')
+    else:
+        form = ContactForm()
+
+    return render(request, 'unauthorized/landing/home.html', {'form': form})
+
+
 
 # ------------------ Log in page ------------------------
 class CustomLoginForm(AuthenticationForm):
@@ -98,29 +128,6 @@ class SignUpView(CreateView):
         context["submit_label"] = "Create account"
         return context
 
-# ------------------ Landing page ------------------------
-class ContactView(FormView):
-    form_class = ContactForm
-    template_name = "unauthorized/landing/home.html"
-    success_url = reverse_lazy('home')
-
-    def form_valid(self, form):
-        email = form.cleaned_data["email"]
-        subject = form.cleaned_data["subject"]
-        message = form.cleaned_data["message"]
-
-        full_message = (
-            f"Received message below from {email}, {subject}\n"
-            f"________________________\n\n"
-            f"{message}"
-        )
-        send_mail(
-            subject="Received contact form submission",
-            message=full_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.NOTIFY_EMAIL],
-        )
-        return super().form_valid(form)
 # ------------------ Change password page ------------------------
 
 
