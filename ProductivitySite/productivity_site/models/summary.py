@@ -1,5 +1,5 @@
 from django.db import models
-from productivity_site.models import Syllabus
+from .syllabus import Syllabus
 
 class Summary(models.Model):
     summary_id = models.IntegerField(primary_key=True)

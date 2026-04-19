@@ -1,5 +1,5 @@
 from django.db import models
-from productivity_site.models import Subject
+from .subject import Subject
 
 class Syllabus(models.Model):
     syllabus_id = models.IntegerField(primary_key=True)
