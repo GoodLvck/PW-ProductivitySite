@@ -158,7 +158,45 @@ Detalles del despliegue en Docker:
 - Durante la build se instalan `pip`, `setuptools` y `wheel`, y despues las dependencias del proyecto desde `pyproject.toml`
 - Al arrancar, ejecuta `python manage.py migrate`
 - La base de datos SQLite se persiste en un volumen Docker usando `SQLITE_PATH=/data/db.sqlite3`
+- Docker Compose lee el fichero `.env` de la raiz del repositorio para interpolar valores
+- El contenedor solo recibe las variables que `docker-compose.yml` expone en `environment`
 - Si `DJANGO_EMAIL_BACKEND` usa el backend de consola, los mensajes del formulario de contacto apareceran en `docker compose logs`
+
+### Correo en Docker
+
+Para que el formulario de contacto envie correos desde Docker, no basta con definir las variables SMTP en `.env`: tambien deben estar expuestas en `docker-compose.yml`. Este proyecto ya las reenvia al servicio `web`.
+
+El flujo correcto es:
+
+1. Crear `.env` desde `.env.example`
+2. Rellenar las variables SMTP en `.env`
+3. Levantar el proyecto con `docker compose up --build`
+
+Ejemplo minimo para SMTP real en Docker:
+
+```env
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DJANGO_EMAIL_HOST=smtp.gmail.com
+DJANGO_EMAIL_PORT=587
+DJANGO_EMAIL_HOST_USER=your-account@gmail.com
+DJANGO_EMAIL_HOST_PASSWORD=your-app-password
+DJANGO_EMAIL_USE_TLS=true
+DJANGO_EMAIL_USE_SSL=false
+DJANGO_DEFAULT_FROM_EMAIL=your-account@gmail.com
+DJANGO_NOTIFY_EMAIL=your-account@gmail.com
+```
+
+Si quieres probar el formulario sin enviar correos reales, deja:
+
+```env
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+```
+
+En ese caso, el contenido del mensaje aparecera en los logs del contenedor:
+
+```bash
+docker compose logs -f
+```
 
 Para detener los contenedores:
 
