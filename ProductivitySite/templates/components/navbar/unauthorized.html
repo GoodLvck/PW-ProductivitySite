@@ -10,7 +10,9 @@
         </div>
     </div>
     <div class="nav-right">
-        {% include "components/button/link-button-secondary.html" with href="/accounts/login" text="Login" %}
-        {% include "components/button/link-button-primary.html" with href="/accounts/signup" text="Sign Up" %}
+        {% url 'login' as login_url %}
+        {% url 'signup' as signup_url %}
+        {% include "components/button/link-button-secondary.html" with href=login_url text="Login" %}
+        {% include "components/button/link-button-primary.html" with href=signup_url text="Sign Up" %}
     </div>
 </nav>

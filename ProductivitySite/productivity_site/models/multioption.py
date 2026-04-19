@@ -1,5 +1,5 @@
 from django.db import models
-from productivity_site.models import Summary
+from .summary import Summary
 
 class Multioption(models.Model):
     multioption_id = models.IntegerField(primary_key=True)
