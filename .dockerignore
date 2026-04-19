@@ -1,10 +1,14 @@
 .git
 .idea
+.idea/
+ProductivitySite/.idea/
 __pycache__/
+ProductivitySite/**/__pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.sqlite3
 .venv/
+ProductivitySite/.venv/
 venv/
 node_modules/
