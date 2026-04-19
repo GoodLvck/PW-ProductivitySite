@@ -121,3 +121,6 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+DEFAULT_FROM_EMAIL = "no-reply@zenorbit.com"
+NOTIFY_EMAIL = "asp46@alumnes.udl.cat"

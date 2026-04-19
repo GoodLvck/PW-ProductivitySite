@@ -68,6 +68,10 @@ i {
     align-content: center;
 }
 
+textarea {
+    resize: none;
+}
+
 
 
 
