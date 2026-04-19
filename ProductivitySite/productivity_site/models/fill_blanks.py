@@ -1,5 +1,5 @@
 from django.db import models
-from productivity_site.models import Summary
+from .summary import Summary
 
 class FillBlanks(models.Model):
     fill_blanks_id = models.IntegerField(primary_key=True)
