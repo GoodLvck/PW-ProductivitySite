@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView
 from django.urls import reverse_lazy
 
 from .forms import ContactForm
@@ -172,4 +172,3 @@ def profile(request):
 def logout_view(request):
     logout(request)
     return redirect("productivity_site:home")
-
