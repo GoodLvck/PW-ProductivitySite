@@ -1,0 +1,15 @@
+<button type="{{ type|default:'submit' }}" class="button {{ button_style }}">
+    {% if icon_left %}
+    <span class="button_icon" aria-hidden="true">
+        <i class="fi {{ icon_left }}"></i>
+    </span>
+    {% endif %}
+
+    <span class="button_label">{{ text }}</span>
+
+    {% if icon_right %}
+    <span class="button_icon" aria-hidden="true">
+        <i class="fi {{ icon_right }}"></i>
+    </span>
+    {% endif %}
+</button>

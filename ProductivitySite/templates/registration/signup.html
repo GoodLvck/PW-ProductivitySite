@@ -1,0 +1,12 @@
+<!-- templates/registration/signup.html -->
+
+{% extends "registration/base_registration.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block auth_footer %}
+<p class="login-link">
+    Already have an account?
+    <a href="{% url 'login' %}">Login here</a>
+</p>
+{% endblock %}

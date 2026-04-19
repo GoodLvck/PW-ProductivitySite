@@ -1,0 +1,36 @@
+a {
+    text-decoration: none;
+}
+
+.button {
+    padding: 8px 20px;
+    border-radius: 10px;
+    opacity: 1;
+    transition: 0.3s;
+    height: inherit;
+}
+
+.button:hover {
+    outline: 0;
+}
+
+.button-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+}
+
+.button-secondary {
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    background-color: inherit;
+}
+
+.button-secondary:hover {
+    background-color: var(--accent);
+    color: var(--primary-foreground);
+}
+
+.button-primary:hover{
+    opacity: 0.85;
+}

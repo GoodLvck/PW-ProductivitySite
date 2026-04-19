@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block templateBody %}
+    <div class="app-layout">
+        <div class="app-sidebar">
+            {% include "components/sidebar/sidebar.html" %}
+        </div>
+        <div class="app-navbar">
+            {% include "components/navbar/authorized.html" %}
+        </div>
+        <div class="app-main">
+            {% block page_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
