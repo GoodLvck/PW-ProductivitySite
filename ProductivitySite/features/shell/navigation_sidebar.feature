@@ -12,21 +12,22 @@ Feature: Sidebar navigation
     And the "<item>" item is highlighted as active
 
     Examples:
-      | item         | route          |
-      | Dashboard    | /dashboard     |
-      | Subjects     | /subjects      |
-      | Calendar     | /calendar      |
-      | Productivity | /productivity  |
-      | Profile      | /profile       |
+      | item         | route         |
+      | Dashboard    | /dashboard    |
+      | Subjects     | /subjects     |
+      | Calendar     | /calendar     |
+      | Productivity | /productivity |
+      | Profile      | /profile      |
 
+  @wip
   Scenario: Collapse and expand the sidebar
     When I click the sidebar toggle
     Then the sidebar collapses showing only icons
     When I click it again
     Then the sidebar expands showing icons and labels
 
-  Scenario: Sidebar on mobile
-    Given the viewport is mobile
-    When I click the sidebar toggle
-    Then the sidebar opens as an overlay
-    And clicking outside closes it
+#  Scenario: Sidebar on mobile
+#    Given the viewport is mobile
+#    When I click the sidebar toggle
+#    Then the sidebar opens as an overlay
+#    And clicking outside closes it

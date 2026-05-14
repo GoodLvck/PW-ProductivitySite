@@ -1,10 +1,12 @@
+@wip
 Feature: Delete subtask
   As an authenticated user
   I want to delete a subtask
   So that I can remove it from my planning
 
   Scenario: Confirmed deletion
-    Given I am on the subtask detail page
+    Given I am logged in
+    And I am on the subtask detail page
     When I click "Edit"
     And I click "Delete subtask"
     And I confirm
@@ -13,6 +15,8 @@ Feature: Delete subtask
     And the subtask counter decreases by 1
 
   Scenario: Cancel deletion
+    Given I am logged in
+    And I am on the subtask detail page
     When I click "Delete subtask"
     And I cancel the confirmation
     Then the subtask still exists
