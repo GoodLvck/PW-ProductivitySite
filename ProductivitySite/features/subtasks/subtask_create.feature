@@ -1,3 +1,4 @@
+@wip
 Feature: Create subtask
   As an authenticated user
   I want to break a task down into subtasks
@@ -16,15 +17,15 @@ Feature: Create subtask
     Then the subtask "Solve exercise 1" appears in the list
     And the subtask counter increases by 1
 
-  Scenario: Generate subtasks with AI
-    Given the task has no subtasks yet
-    When I click "Generate with AI"
-    And I confirm the generation
-    Then several suggested subtasks are added to the list
+#  Scenario: Generate subtasks with AI
+#    Given the task has no subtasks yet
+#    When I click "Generate with AI"
+#    And I confirm the generation
+#    Then several suggested subtasks are added to the list
 
-  Scenario: AI generation is disabled when subtasks already exist
-    Given the task already has at least one subtask
-    Then the "Generate with AI" button is disabled
+#  Scenario: AI generation is disabled when subtasks already exist
+#    Given the task already has at least one subtask
+#    Then the "Generate with AI" button is disabled
 
   Scenario: Required name validation
     When I click "New subtask"

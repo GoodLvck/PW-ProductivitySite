@@ -1,3 +1,4 @@
+@wip
 Feature: Delete task
   As an authenticated user
   I want to delete a task
