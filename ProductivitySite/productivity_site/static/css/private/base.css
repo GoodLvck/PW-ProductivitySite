@@ -9,6 +9,12 @@
         "sidebar navbar"
         "sidebar main";
     height: 100vh;
+    transition: grid-template-columns .2s ease;
+}
+
+.app-layout.sidebar-collapsed,
+.sidebar-collapsed-pref .app-layout {
+    grid-template-columns: var(--sidebar-collapsed-width) 1fr;
 }
 
 /* -------------- Sidebar -------------- */
@@ -33,6 +39,14 @@
     padding: .5rem 2rem;
     border-bottom: 1px solid var(--border);
     color: var(--muted-foreground);
+}
+
+.sidebar-collapse-button {
+    width: 100%;
+    border: none;
+    background-color: inherit;
+    color: inherit;
+    cursor: pointer;
 }
 
 .sidebar-item {
@@ -87,6 +101,42 @@
 
 .sidebar-footer {
     padding: 2rem 2rem;
+}
+
+.app-layout.sidebar-collapsed .sidebar-top,
+.sidebar-collapsed-pref .app-layout .sidebar-top {
+    padding: 1rem;
+    text-align: center;
+}
+
+.app-layout.sidebar-collapsed .nav-logo span,
+.app-layout.sidebar-collapsed .sidebar-item span,
+.app-layout.sidebar-collapsed .sidebar-nav-group-title,
+.sidebar-collapsed-pref .app-layout .nav-logo span,
+.sidebar-collapsed-pref .app-layout .sidebar-item span,
+.sidebar-collapsed-pref .app-layout .sidebar-nav-group-title {
+    display: none;
+}
+
+.app-layout.sidebar-collapsed .sidebar-toggle,
+.app-layout.sidebar-collapsed .sidebar-nav,
+.app-layout.sidebar-collapsed .sidebar-footer,
+.sidebar-collapsed-pref .app-layout .sidebar-toggle,
+.sidebar-collapsed-pref .app-layout .sidebar-nav,
+.sidebar-collapsed-pref .app-layout .sidebar-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.app-layout.sidebar-collapsed .sidebar-item,
+.sidebar-collapsed-pref .app-layout .sidebar-item {
+    justify-content: center;
+    gap: 0;
+}
+
+.app-layout.sidebar-collapsed .sidebar-collapse-button i,
+.sidebar-collapsed-pref .app-layout .sidebar-collapse-button i {
+    transform: rotate(180deg);
 }
 
 /* -------------- Navbar -------------- */
