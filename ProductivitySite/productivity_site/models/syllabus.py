@@ -5,6 +5,3 @@ class Syllabus(models.Model):
     syllabus_id = models.IntegerField(primary_key=True)
     subject_id = models.ForeignKey(Subject, on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
-    def __str__(self):
-        return f"Syllabus #{self.syllabus_id} - {self.subject_id}"
-
