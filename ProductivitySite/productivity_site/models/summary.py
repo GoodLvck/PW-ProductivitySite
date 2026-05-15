@@ -6,3 +6,6 @@ class Summary(models.Model):
     syllabus_id = models.OneToOneField(Syllabus, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     formatted_text = models.TextField()
+    def __str__(self):
+        return self.name
+

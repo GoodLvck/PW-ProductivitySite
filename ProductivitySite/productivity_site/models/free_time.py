@@ -11,3 +11,6 @@ class FreeTime(models.Model):
     friday = models.IntegerField(default=0)
     saturday = models.IntegerField(default=0)
     sunday = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Free time - {self.user_id}"
