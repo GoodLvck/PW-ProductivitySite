@@ -3,7 +3,6 @@ from .free_time import FreeTime
 from .syllabus import  Syllabus
 from .summary import Summary
 from .podcast import Podcast
-from .priority import Priority
 from .task import Task
 from .subtask import Subtask
 from .fill_blanks import FillBlanks

@@ -1,7 +1,6 @@
 from django.db import models
 
 from productivity_site.models.subject import Subject
-from productivity_site.models.priority import Priority
 
 class Task(models.Model):
     PRIORITY_LOW = "low"

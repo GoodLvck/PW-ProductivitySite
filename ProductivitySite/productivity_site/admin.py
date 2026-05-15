@@ -29,23 +29,17 @@ class SummaryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(Priority)
-class PriorityAdmin(admin.ModelAdmin):
-    list_display = ('priority_id', 'name')
-    search_fields = ('name',)
-
-
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('task_id', 'subject_id', 'name', 'due_date', 'priority_id', 'estimated_time', 'text')
-    list_filter = ('subject_id', 'priority_id', 'due_date')
+    list_display = ('task_id', 'subject_id', 'name', 'due_date', 'priority', 'estimated_time', 'text')
+    list_filter = ('subject_id', 'priority', 'due_date')
     search_fields = ('name', 'text')
 
 
 @admin.register(Subtask)
 class SubtaskAdmin(admin.ModelAdmin):
-    list_display = ('subtask_id', 'task_id', 'name', 'due_date', 'priority_id', 'estimated_time', 'description')
-    list_filter = ('task_id', 'priority_id', 'due_date')
+    list_display = ('subtask_id', 'task_id', 'name', 'due_date', 'priority', 'estimated_time', 'description')
+    list_filter = ('task_id', 'priority', 'due_date')
     search_fields = ('name', 'description')
 
 
