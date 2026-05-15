@@ -1,0 +1,259 @@
+/* -------------- Subjects view -------------- */
+.subjects-title-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.subjects-title-block a {
+    height: min-content;
+    align-content: center;
+    align-self: end;
+}
+
+.subjects-title {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.subjects-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.subject-card {
+    padding: 1rem 1.5rem;
+}
+
+.subject-card-top {
+    display: flex;
+    flex-direction: row;
+    gap: .2rem;
+}
+
+.subject-card-texts {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.subject-card-texts h4 {
+    margin: 0;
+}
+
+.subject-card-texts p {
+    margin: 0;
+    font-size: smaller;
+    color: var(--muted-foreground);
+}
+
+/* -------------- Subject details - Breadcrumb -------------- */
+#subject-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+#subject-breadcrumb {
+    color: var(--muted-foreground);
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+}
+
+#subject-breadcrumb a {
+    transition: 0.3s;
+}
+
+#subject-breadcrumb a:hover {
+    color: var(--foreground);
+}
+
+#subject-breadcrumb i {
+    display: inline-flex;
+    align-self: center;
+}
+
+/* -------------- Subject details - header -------------- */
+
+#subject-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#subject-header h1 {
+    margin: 0;
+}
+
+#subject-header p {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-weight: lighter;
+}
+
+/* -------------- Subject details - Tasks listing -------------- */
+#subject-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.subject-section-title {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+}
+
+.subject-section-title i {
+    display: inline-flex;
+}
+
+.subject-section-title h3 {
+    display: inline-flex;
+    margin: 0;
+}
+
+.subject-section-title a {
+    margin-left: auto;
+    height: fit-content;
+}
+
+.subject-tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.subject-task-card {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.task-toggle-icon {
+    color: var(--card-foreground);
+    font-size: larger;
+    margin-bottom: auto;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.task-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-grow: 1;
+}
+
+.task-card-content p {
+    margin: 0;
+}
+
+.subject-task-head {
+    display: flex;
+    flex-direction: row;
+}
+
+.subject-task-info {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.subject-task-title {
+    font-weight: bolder;
+}
+
+.subject-task-text {
+    font-weight: lighter;
+    color: var(--muted-foreground);
+}
+
+.subject-task-badge {
+    margin-left: auto;
+}
+
+.subject-task-badge span {
+    font-size: smaller;
+    padding: .2rem .4rem;
+    border-radius: var(--radius);
+}
+
+.subject-task-badge-low span {
+    background-color: green;
+    color: white;
+}
+
+.subject-task-badge-medium span {
+    background-color: orange;
+    color: white;
+}
+
+.subject-task-badge-high span {
+    background-color: red;
+    color: white;
+}
+
+.subject-task-meta {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+.subject-task-meta-item {
+    color: var(--muted-foreground);
+    font-size: small;
+}
+
+.subject-completed-section-title span{
+    font-weight: lighter;
+    color: var(--muted-foreground);
+    margin: 0;
+    font-size: smaller;
+}
+
+.subject-completed-grid .subject-task-title{
+    text-decoration: line-through;
+}
+
+.subject-task-card-completed {
+    opacity: 0.75;
+}
+
+/* -------------- Subject details - Material listing -------------- */
+#subject-materials {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#subject-material-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 3rem;
+    color: var(--muted-foreground);
+}
+
+#subject-material-card i {
+    font-size: xx-large;
+}
+
+#subject-material-card p {
+    font-size: large;
+    font-weight: lighter;
+    margin: 0;
+}
+
+

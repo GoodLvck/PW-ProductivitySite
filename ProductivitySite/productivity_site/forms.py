@@ -1,5 +1,7 @@
 from django import forms
 
+from productivity_site.models import Subject, Task
+
 
 class ContactForm(forms.Form):
     name = forms.CharField(
@@ -27,3 +29,49 @@ class ContactForm(forms.Form):
         email = self.cleaned_data["email"].strip().lower()
         return email
 
+class SubjectForm(forms.ModelForm):
+    class Meta:
+        model = Subject
+        fields = ["name", "description", "color"]
+
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "placeholder": "Subject name",
+                    "class": "form-field",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "placeholder": "Describe what you will study in this subject...",
+                    "class": "form-field",
+                    "rows": 5,
+                }
+            ),
+            "color": forms.TextInput(
+                attrs={
+                    "type": "color",
+                    "class": "form-field color-field",
+                }
+            ),
+        }
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["name", "text", "due_date", "priority", "estimated_time"]
+
+        labels = {
+            "name": "Task name",
+            "text": "Description",
+            "due_date": "Due date",
+            "priority": "Priority",
+            "estimated_time": "Estimated time",
+        }
+
+        widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Task name", "class": "form-field"}),
+            "text": forms.Textarea(attrs={"placeholder": "Describe the task...", "class": "form-field", "rows": 5}),
+            "due_date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-field"}),
+            "estimated_time": forms.NumberInput(attrs={"placeholder": "Minutes", "class": "form-field", "min": 1}),
+        }

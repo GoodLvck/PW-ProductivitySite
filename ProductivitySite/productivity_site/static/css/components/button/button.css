@@ -3,11 +3,25 @@ a {
 }
 
 .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 8px 20px;
     border-radius: 10px;
     opacity: 1;
     transition: 0.3s;
     height: inherit;
+}
+
+.button-icon {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.button-icon i {
+    line-height: 1;
 }
 
 .button:hover {
