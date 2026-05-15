@@ -12,10 +12,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import CreateView
 from django.urls import reverse_lazy, reverse
 
-from .forms import ContactForm, SubjectForm, TaskForm
+from .forms import ContactForm, SubjectForm, TaskForm, SubtaskForm
 from django.conf import settings
 
-from .models import Subject, Task, subject
+from .models import Subject, Task, subject, Subtask
 
 
 # ------------------ Landing page ------------------------
@@ -205,6 +205,48 @@ def subject_read(request, subject_id):
         "completed_tasks": completed_tasks,
     })
 
+@login_required
+def subject_update(request, subject_id):
+    subject = get_object_or_404(
+        Subject,
+        subject_id=subject_id,
+        user_id=request.user,
+    )
+
+    if request.method == "POST":
+        form = SubjectForm(request.POST, instance=subject)
+        if form.is_valid():
+            form.save()
+            return redirect("productivity_site:subject_read", subject_id=subject.subject_id)
+    else:
+        form = SubjectForm(instance=subject)
+
+    return render(request, "authorized/create.html", {
+        "form": form,
+        "form_title": "Edit subject",
+        "form_subtitle": "Update this subject.",
+        "submit_label": "Save changes",
+        "cancel_url": reverse("productivity_site:subject_read", args=[subject.subject_id]),
+    })
+
+@login_required
+def subject_delete(request, subject_id):
+    subject = get_object_or_404(
+        Subject,
+        subject_id=subject_id,
+        user_id=request.user,
+    )
+
+    if request.method == "POST":
+        subject.delete()
+        return redirect("productivity_site:subjects")
+
+    return render(request, "authorized/delete.html", {
+        "object_name": subject.name,
+        "object_type": "subject",
+        "cancel_url": reverse("productivity_site:subject_read", args=[subject.subject_id]),
+    })
+
 # ------------------ Task create page ------------------------
 @login_required
 def task_create(request, subject_id):
@@ -236,13 +278,180 @@ def task_create(request, subject_id):
         ),
     })
 
-def task_read(request, task_id):
-    task = get_object_or_404(Task, pk=task_id, user_id=request.user)
-    return render(request, "authorized/subjects/task_view.html", {
+def task_read(request, subject_id, task_id):
+    task = get_object_or_404(Task, pk=task_id, subject_id=subject_id)
+    subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
+
+    subtasks = Subtask.objects.filter(
+        task_id=task,
+    )
+
+    return render(request, "authorized/tasks/task_view.html", {
         "task": task,
+        "subject": subject,
+        "subtasks": subtasks,
+    })
+
+@login_required
+def task_update(request, subject_id, task_id):
+    task = get_object_or_404(
+        Task,
+        task_id=task_id,
+        subject_id__subject_id=subject_id,
+        subject_id__user_id=request.user,
+    )
+
+    if request.method == "POST":
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                "productivity_site:task_read",
+                subject_id=subject_id,
+                task_id=task.task_id,
+            )
+    else:
+        form = TaskForm(instance=task)
+
+    return render(request, "authorized/create.html", {
+        "form": form,
+        "form_title": "Edit task",
+        "form_subtitle": f"Update {task.name}.",
+        "submit_label": "Save changes",
+        "cancel_url": reverse("productivity_site:task_read", args=[subject_id, task.task_id]),
     })
 
 
+@login_required
+def task_delete(request, subject_id, task_id):
+    task = get_object_or_404(
+        Task,
+        task_id=task_id,
+        subject_id__subject_id=subject_id,
+        subject_id__user_id=request.user,
+    )
+
+    if request.method == "POST":
+        task.delete()
+        return redirect("productivity_site:subject_read", subject_id=subject_id)
+
+    return render(request, "authorized/delete.html", {
+        "object_name": task.name,
+        "object_type": "task",
+        "cancel_url": reverse("productivity_site:task_read", args=[subject_id, task.task_id]),
+    })
+
+
+# ------------------ Subtask create page ------------------------
+@login_required
+def subtask_create(request, subject_id, task_id):
+    task = get_object_or_404(
+        Task,
+        task_id=task_id,
+        subject_id__subject_id=subject_id,
+        subject_id__user_id=request.user,
+    )
+
+    if request.method == "POST":
+        form = SubtaskForm(request.POST)
+
+        if form.is_valid():
+            subtask = form.save(commit=False)
+            subtask.task_id = task
+            subtask.save()
+
+            return redirect(
+                "productivity_site:task_read",
+                subject_id=subject_id,
+                task_id=task.task_id,
+            )
+    else:
+        form = SubtaskForm()
+
+    return render(request, "authorized/create.html", {
+        "form": form,
+        "form_title": "Create subtask",
+        "form_subtitle": f"Add a subtask to {task.name}.",
+        "submit_label": "Create subtask",
+        "cancel_url": reverse(
+            "productivity_site:task_read",
+            args=[subject_id, task.task_id],
+        ),
+    })
+
+@login_required
+def subtask_read(request, subject_id, task_id, subtask_id):
+    subtask = get_object_or_404(
+        Subtask,
+        subtask_id=subtask_id,
+        task_id__task_id=task_id,
+        task_id__subject_id__subject_id=subject_id,
+        task_id__subject_id__user_id=request.user,
+    )
+
+    task = subtask.task_id
+    subject = task.subject_id
+
+    return render(request, "authorized/subtasks/subtask_view.html", {
+        "subject": subject,
+        "task": task,
+        "subtask": subtask,
+    })
+
+@login_required
+def subtask_update(request, subject_id, task_id, subtask_id):
+    subtask = get_object_or_404(
+        Subtask,
+        subtask_id=subtask_id,
+        task_id__task_id=task_id,
+        task_id__subject_id__subject_id=subject_id,
+        task_id__subject_id__user_id=request.user,
+    )
+
+    if request.method == "POST":
+        form = SubtaskForm(request.POST, instance=subtask)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                "productivity_site:subtask_read",
+                subject_id=subject_id,
+                task_id=task_id,
+                subtask_id=subtask.subtask_id,
+            )
+    else:
+        form = SubtaskForm(instance=subtask)
+
+    return render(request, "authorized/create.html", {
+        "form": form,
+        "form_title": "Edit subtask",
+        "form_subtitle": f"Update {subtask.name}.",
+        "submit_label": "Save changes",
+        "cancel_url": reverse("productivity_site:subtask_read", args=[subject_id, task_id, subtask.subtask_id]),
+    })
+
+@login_required
+def subtask_delete(request, subject_id, task_id, subtask_id):
+    subtask = get_object_or_404(
+        Subtask,
+        subtask_id=subtask_id,
+        task_id__task_id=task_id,
+        task_id__subject_id__subject_id=subject_id,
+        task_id__subject_id__user_id=request.user,
+    )
+
+    if request.method == "POST":
+        subtask.delete()
+        return redirect(
+            "productivity_site:task_read",
+            subject_id=subject_id,
+            task_id=task_id,
+        )
+
+    return render(request, "authorized/delete.html", {
+        "object_name": subtask.name,
+        "object_type": "subtask",
+        "cancel_url": reverse("productivity_site:subtask_read", args=[subject_id, task_id, subtask.subtask_id]),
+    })
 
 
 # ------------------ Productivity page ------------------------

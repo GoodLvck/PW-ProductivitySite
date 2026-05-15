@@ -1,0 +1,58 @@
+<div class="floating-actions">
+    <button type="button"
+            class="floating-actions-toggle"
+            aria-label="Open actions"
+            popovertarget="floating-actions-menu">
+        <i class="fi fi-rr-pencil"></i>
+    </button>
+
+    <div id="floating-actions-menu" class="floating-actions-menu" popover>
+        {% if edit_url %}
+            <a href="{{ edit_url }}" class="floating-actions-item">
+                <i class="fi fi-rr-edit"></i>
+                <span>Edit</span>
+            </a>
+        {% endif %}
+
+        {% if delete_url %}
+            <button type="button"
+                    class="floating-actions-item floating-actions-delete">
+                <i class="fi fi-rr-trash"></i>
+                <span>Delete</span>
+            </button>
+        {% endif %}
+    </div>
+</div>
+
+{% if delete_url %}
+    <div id="delete-confirmation" class="delete-popover" popover>
+        <h3>Delete {{ object_type }}</h3>
+        <p>Are you sure you want to delete "{{ object_name }}"?</p>
+        <p class="delete-warning">{{ delete_warning }}</p>
+
+        <form method="post" action="{{ delete_url }}">
+            {% csrf_token %}
+
+            <div class="delete-popover-actions">
+                <button type="button"
+                        class="button button-secondary"
+                        popovertarget="delete-confirmation"
+                        popovertargetaction="hide">
+                    Cancel
+                </button>
+                <button type="submit" class="button button-destructive">
+                    Delete
+                </button>
+            </div>
+        </form>
+    </div>
+{% endif %}
+
+<script>
+    document.querySelectorAll(".floating-actions-delete").forEach((deleteButton) => {
+        deleteButton.addEventListener("click", () => {
+            document.getElementById("floating-actions-menu")?.hidePopover();
+            document.getElementById("delete-confirmation")?.showPopover();
+        });
+    });
+</script>

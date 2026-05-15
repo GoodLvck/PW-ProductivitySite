@@ -1,4 +1,5 @@
 @import "subjects.css";
+@import "tasks.css";
 
 .app-layout {
     display: grid;
@@ -139,4 +140,53 @@
     color: var(--muted-foreground);
     font-weight: lighter;
     margin: 0;
+}
+
+/* -------------- Breadcrumb -------------- */
+.breadcrumb {
+    color: var(--muted-foreground);
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+}
+
+.breadcrumb a {
+    transition: 0.3s;
+}
+
+.breadcrumb a:hover {
+    color: var(--foreground);
+}
+
+.breadcrumb i {
+    display: inline-flex;
+    align-self: center;
+}
+
+/* -------------- Priority badge -------------- */
+.priority-badge {
+    margin-left: auto;
+    display: inline-block;
+}
+
+.priority-badge span {
+    font-size: small;
+    font-weight: normal;
+    padding: .2rem .4rem;
+    border-radius: var(--radius);
+}
+
+.priority-badge-low span {
+    background-color: rgba(0, 128, 0, .25);
+    color: green;
+}
+
+.priority-badge-medium span {
+    background-color: rgba(255, 165, 0, .25);
+    color: orange;
+}
+
+.priority-badge-high span {
+    background-color: rgba(255, 0, 0, .25);
+    color: red;
 }
