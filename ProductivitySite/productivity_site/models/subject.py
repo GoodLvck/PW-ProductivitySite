@@ -7,3 +7,6 @@ class Subject(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     color = models.CharField(max_length=7, default="#f59e0b")
+
+    def __str__(self):
+        return self.name

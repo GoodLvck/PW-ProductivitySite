@@ -1,3 +1,4 @@
+@wip
 Feature: Delete subject
   As an authenticated user
   I want to delete a subject

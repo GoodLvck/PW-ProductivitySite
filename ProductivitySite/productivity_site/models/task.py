@@ -26,3 +26,6 @@ class Task(models.Model):
     )
     estimated_time = models.IntegerField()
     completed = models.BooleanField(default=False)
+    def __str__(self):
+        return self.name
+

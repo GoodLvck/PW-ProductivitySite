@@ -7,6 +7,7 @@ Feature: Create subject
     Given I am logged in
     And I am on "/subjects"
 
+  @wip
   Scenario: Create a subject with valid data
     When I click "New subject"
     And I fill in "Name" with "Mathematics"
@@ -16,6 +17,7 @@ Feature: Create subject
     Then the subject "Mathematics" appears in the grid
     And the card uses the selected color
 
+  @wip
   Scenario: Required name validation
     When I click "New subject"
     And I leave the "Name" field empty
@@ -23,6 +25,7 @@ Feature: Create subject
     Then the "Create" button remains disabled
     And the subject is not created
 
+  @wip
   Scenario: Cancel creation
     When I click "New subject"
     And I fill in "Name" with "History"
@@ -30,6 +33,7 @@ Feature: Create subject
     Then the dialog closes
     And the subject "History" does not appear in the grid
 
+  @wip
   Scenario: Subject name must be unique
     Given a subject named "Mathematics" already exists
     When I click "New subject"

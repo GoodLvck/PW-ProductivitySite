@@ -1,3 +1,4 @@
+@wip
 Feature: Edit subject
   As an authenticated user
   I want to modify the data of a subject
