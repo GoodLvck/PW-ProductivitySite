@@ -11,6 +11,4 @@ class Subtask(models.Model):
     due_date = models.DateTimeField()
     priority_id = models.ForeignKey(Priority, on_delete=models.RESTRICT)
     estimated_time = models.IntegerField()
-    def __str__(self):
-        return self.name
 
