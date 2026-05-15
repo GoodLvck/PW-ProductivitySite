@@ -5,15 +5,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.core.mail import BadHeaderError
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import CreateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
-from .forms import ContactForm
+from .forms import ContactForm, SubjectForm, TaskForm
 from django.conf import settings
+
+from .models import Subject, Task, subject
+
 
 # ------------------ Landing page ------------------------
 def home(request):
@@ -155,7 +158,92 @@ def calendar(request):
 # ------------------ Subjects page ------------------------
 @login_required
 def subjects(request):
-    return render(request, 'authorized/subjects.html')
+    subjects = Subject.objects.filter(user_id=request.user)
+
+    return render(request, "authorized/subjects/subjects.html", {
+        "subjects": subjects,
+    })
+
+@login_required
+def subject_create(request):
+    if request.method == "POST":
+        form = SubjectForm(request.POST)
+
+        if form.is_valid():
+            subject = form.save(commit=False)
+            subject.user_id = request.user
+            subject.save()
+            return redirect("productivity_site:subjects")
+    else:
+        form = SubjectForm()
+
+    return render(request, "authorized/create.html", {
+        "form": form,
+        "form_title": "Create subject",
+        "form_subtitle": "Add a subject to organize your tasks and study material.",
+        "submit_label": "Create subject",
+        "cancel_url": reverse("productivity_site:subjects"),
+    })
+
+@login_required
+def subject_read(request, subject_id):
+    subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
+
+    pending_tasks = Task.objects.filter(
+        subject_id=subject,
+        completed=False,
+    )
+
+    completed_tasks = Task.objects.filter(
+        subject_id=subject,
+        completed=True,
+    )
+
+    return render(request, "authorized/subjects/subject_view.html", {
+        "subject": subject,
+        "pending_tasks": pending_tasks,
+        "completed_tasks": completed_tasks,
+    })
+
+# ------------------ Task create page ------------------------
+@login_required
+def task_create(request, subject_id):
+    subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
+
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.subject_id = subject
+            task.save()
+
+            return redirect(
+                "productivity_site:subject_read",
+                subject_id=subject.subject_id,
+            )
+    else:
+        form = TaskForm()
+
+    return render(request, "authorized/create.html", {
+        "form": form,
+        "form_title": "Create task",
+        "form_subtitle": f"Add a task to {subject.name}.",
+        "submit_label": "Create task",
+        "cancel_url": reverse(
+            "productivity_site:subject_read",
+            args=[subject.subject_id],
+        ),
+    })
+
+def task_read(request, task_id):
+    task = get_object_or_404(Task, pk=task_id, user_id=request.user)
+    return render(request, "authorized/subjects/task_view.html", {
+        "task": task,
+    })
+
+
+
 
 # ------------------ Productivity page ------------------------
 @login_required

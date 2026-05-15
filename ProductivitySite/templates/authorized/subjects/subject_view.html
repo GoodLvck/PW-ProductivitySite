@@ -1,0 +1,104 @@
+{% extends "authorized/base_authorized.html" %}
+
+{% block title %} Subjects {% endblock %}
+
+{% block page_content %}
+    <div id="subject-layout">
+        <!-- Breadcrumb -->
+        <div id="subject-breadcrumb">
+            <a href="{% url 'productivity_site:subjects' %}">Subjects</a>
+            <i class="fi fi-rr-angle-small-right"></i>
+            <span style="color: {{ subject.color }}">{{ subject.name }}</span>
+        </div>
+
+        <!-- Header -->
+        <div id="subject-header">
+            <h1 style="color: {{ subject.color }}">{{ subject.name }}</h1>
+            <p>{{ subject.description }}</p>
+        </div>
+
+        <!-- Tasks listing -->
+        <div id="subject-tasks">
+            <div class="subject-section-title">
+                <i class="fi fi-rr-task-checklist"></i>
+                <h3>Tasks ({{ pending_tasks|length }})</h3>
+                {% url 'productivity_site:task_create' subject.subject_id as task_create_url %}
+                {% include "components/button/link-button-secondary.html" with icon_left='fi-rr-plus' text='Create task' href=task_create_url %}
+            </div>
+
+            <!-- Pending tasks -->
+            <div class="subject-tasks-grid">
+                {% for task in pending_tasks %}
+                <div class="subject-task-card subject-card card"
+                   style="border-left: .25rem solid {{ subject.color }}">
+                    <button type="button" id="{{ task.task_id }}" class="task-toggle-icon">
+                        <i class="fi fi-rr-circle"></i>
+                    </button>
+                    <a href="{% url 'productivity_site:task_read' task.task_id %}"
+                       class="task-card-content">
+                        <div class="subject-task-head">
+                            <div class="subject-task-info">
+                                <p class="subject-task-title">{{ task.name }}</p>
+                                <p class="subject-task-text">{{ task.text }}</p>
+                            </div>
+                            <div class="subject-task-badge subject-task-badge-{{ task.priority }}">
+                                <span>{{ task.priority }}</span>
+                                <i class="fi fi-rr-angle-small-right"></i>
+                            </div>
+                        </div>
+                        <div class="subject-task-meta">
+                            <span class="subject-task-meta-item">
+                                {{ task.estimated_time }} min
+                            </span>
+                            <span class="subject-task-meta-item">
+                                Due: {{ task.due_date | date:"j M" }}
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                    <p>NO PENDING TASKS!!</p> {# TODO: Mejorar mensaje vacío #}
+                {% endfor %}
+            </div>
+
+            <!-- Completed tasks -->
+            {% if completed_tasks %}
+                <div class="subject-completed-section-title">
+                    <span>Completed ({{ completed_tasks|length}})</span>
+                </div>
+                <div class="subject-tasks-grid subject-completed-grid">
+                    {% for task in pending_tasks %}
+                    <a href="{% url 'productivity_site:task_read' task.task_id %}"
+                       class="subject-task-card subject-task-card-completed subject-card card"
+                       style="border-left: .25rem solid {{ subject.color }}">
+                        <div id="{{ task.task_id }}" class="task-toggle-icon">
+                            <i class="fi fi-rr-check-circle"></i>
+                        </div>
+                        <div class="task-card-content">
+                            <div class="subject-task-head">
+                                <div class="subject-task-info">
+                                    <p class="subject-task-title">{{ task.name }}</p>
+                                    <p class="subject-task-text">{{ task.text }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Study material -->
+        <div id="subject-materials">
+            <div class="subject-section-title">
+                <i class="fi fi-rr-book-alt"></i>
+                <h3>Study material</h3>
+            </div>
+            <div id="subject-material-card" class="card">
+                <i class="fi fi-rr-book-alt"></i>
+                <p>This section is under construction</p>
+            </div>
+        </div>
+
+
+{% endblock %}

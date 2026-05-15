@@ -72,6 +72,14 @@ textarea {
     resize: none;
 }
 
+.card {
+    border-radius: var(--radius);
+    border: .08rem solid var(--border);
+    box-shadow: var(--card-shadow);
+    background-color: var(--card);
+    color: var(--card-foreground);
+}
+
 
 
 

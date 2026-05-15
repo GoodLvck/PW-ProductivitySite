@@ -20,6 +20,12 @@
     width: 100%;
 }
 
+.form-group input[type="color"] {
+    min-height: 2.75rem;
+    padding: .25rem;
+    cursor: pointer;
+}
+
 .form-group input::placeholder,
 .form-group textarea::placeholder {
     color: var(--muted-foreground);
