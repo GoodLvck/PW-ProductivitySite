@@ -3,23 +3,23 @@
 {% block title %} Subjects {% endblock %}
 
 {% block page_content %}
-    <div id="subject-layout">
+    <div class="details-layout">
         <!-- Breadcrumb -->
-        <div id="subject-breadcrumb">
+        <div class="breadcrumb">
             <a href="{% url 'productivity_site:subjects' %}">Subjects</a>
             <i class="fi fi-rr-angle-small-right"></i>
             <span style="color: {{ subject.color }}">{{ subject.name }}</span>
         </div>
 
         <!-- Header -->
-        <div id="subject-header">
+        <div class="details-header">
             <h1 style="color: {{ subject.color }}">{{ subject.name }}</h1>
             <p>{{ subject.description }}</p>
         </div>
 
         <!-- Tasks listing -->
         <div id="subject-tasks">
-            <div class="subject-section-title">
+            <div class="details-section-title">
                 <i class="fi fi-rr-task-checklist"></i>
                 <h3>Tasks ({{ pending_tasks|length }})</h3>
                 {% url 'productivity_site:task_create' subject.subject_id as task_create_url %}
@@ -34,14 +34,14 @@
                     <button type="button" id="{{ task.task_id }}" class="task-toggle-icon">
                         <i class="fi fi-rr-circle"></i>
                     </button>
-                    <a href="{% url 'productivity_site:task_read' task.task_id %}"
+                    <a href="{% url 'productivity_site:task_read' subject.subject_id task.task_id %}"
                        class="task-card-content">
                         <div class="subject-task-head">
                             <div class="subject-task-info">
                                 <p class="subject-task-title">{{ task.name }}</p>
                                 <p class="subject-task-text">{{ task.text }}</p>
                             </div>
-                            <div class="subject-task-badge subject-task-badge-{{ task.priority }}">
+                            <div class="priority-badge priority-badge-{{ task.priority }}">
                                 <span>{{ task.priority }}</span>
                                 <i class="fi fi-rr-angle-small-right"></i>
                             </div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="subject-tasks-grid subject-completed-grid">
                     {% for task in pending_tasks %}
-                    <a href="{% url 'productivity_site:task_read' task.task_id %}"
+                    <a href="{% url 'productivity_site:task_read' subject.subject_id task.task_id %}"
                        class="subject-task-card subject-task-card-completed subject-card card"
                        style="border-left: .25rem solid {{ subject.color }}">
                         <div id="{{ task.task_id }}" class="task-toggle-icon">
@@ -90,7 +90,7 @@
 
         <!-- Study material -->
         <div id="subject-materials">
-            <div class="subject-section-title">
+            <div class="details-section-title">
                 <i class="fi fi-rr-book-alt"></i>
                 <h3>Study material</h3>
             </div>
@@ -99,6 +99,10 @@
                 <p>This section is under construction</p>
             </div>
         </div>
+    </div>
 
+    {% url 'productivity_site:subject_update' subject.subject_id as edit_url %}
+    {% url 'productivity_site:subject_delete' subject.subject_id as delete_url %}
+    {% include "components/actions/floating_actions.html" with edit_url=edit_url delete_url=delete_url object_type="subject" object_name=subject.name delete_warning="Deleting this subject will also delete its tasks, subtasks, and related study material." %}
 
 {% endblock %}

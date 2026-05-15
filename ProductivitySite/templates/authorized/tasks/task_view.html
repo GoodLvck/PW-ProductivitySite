@@ -1,0 +1,108 @@
+{% extends "authorized/base_authorized.html" %}
+
+{% block title %} Subjects {% endblock %}
+
+{% block page_content %}
+    <div class="details-layout">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{% url 'productivity_site:subjects' %}">Subjects</a>
+            <i class="fi fi-rr-angle-small-right"></i>
+            <a href="{% url 'productivity_site:subject_read' subject.subject_id %}">{{ subject.name }}</a>
+            <i class="fi fi-rr-angle-small-right"></i>
+            <span style="color: {{ subject.color }}">{{ task.name }}</span>
+        </div>
+
+        <!-- Header -->
+        <div class="details-header">
+            <h1>{{ task.name }}</h1>
+            <p>{{ task.text }}</p>
+        </div>
+
+        <!-- Task details card -->
+        <div class="task-details-card card"
+             style="border-left: .25rem solid {{ subject.color }}">
+            <p>{{ task.text }}</p>
+            <div class="task-details-card-meta">
+                <div class="task-details-card-meta-item">
+                    <i class="fi fi-rr-clock-five"></i>
+                    <span>{{ task.estimated_time }} min</span>
+                </div>
+                <div class="task-details-card-meta-item">
+                    <span class="task-details-meta-label">Due date:</span>
+                    <span class="task-details-meta-text">{{ task.due_date | date:"j M" }}</span>
+                </div>
+                <div class="task-details-card-meta-item">
+                    <span class="task-details-meta-label">Priority:</span>
+                    <div class="priority-badge priority-badge-{{ task.priority }}">
+                        <span>{{ task.priority }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subtasks listing -->
+        <div id="task-subtasks">
+            <div class="details-section-title">
+                <h3>Subtasks ({{ pending_subtasks|length }})</h3>
+                    <!-- Generate with AI -->
+{#                {% url 'productivity_site:subtask_create' task.subject_id as task_create_url %}#}
+{#                {% include "components/button/link-button-secondary.html" with icon_left='fi-rr-plus' text='Create task' href=task_create_url %}#}
+                <!-- Create subtask-->
+                {% url 'productivity_site:subtask_create' subject.subject_id task.task_id as subtask_create_url %}
+                {% include "components/button/link-button-secondary.html" with icon_left='fi-rr-plus' text='Create subtask' href=subtask_create_url %}
+            </div>
+
+            <!-- Subtasks -->
+            {% for subtask in subtasks %}
+                {% if not subtask.completed %}
+                    <div class="subtask-card subtask-card-pending card">
+                        <button type="button" id="{{ subtask.subtask_id }}" class="subtask-toggle-icon">
+                            <i class="fi fi-rr-circle"></i>
+                        </button>
+                        <a href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}"
+                           class="subtask-card-content">
+                            <div class="subtask-card-texts">
+                                <p class="subtask-card-name">{{ subtask.name }}</p>
+                                <div class="subtask-card-time">
+                                    <i class="fi fi-rr-clock-five"></i>
+                                    <span>{{ subtask.estimated_time }} min</span>
+                                </div>
+                            </div>
+                            <div class="priority-badge priority-badge-{{ subtask.priority }}">
+                                <span>{{ subtask.priority }}</span>
+                            </div>
+                            <i class="fi fi-rr-angle-small-right"></i>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="subtask-card subtask-card-completed card">
+                        <button type="button" id="{{ subtask.subtask_id }}" class="subtask-toggle-icon">
+                            <i class="fi fi-rr-check-circle"></i>
+                        </button>
+                        <a href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}"
+                           class="subtask-card-content">
+                            <div class="subtask-card-texts">
+                                <p class="subtask-card-name">{{ subtask.name }}</p>
+                                <p class="subtask-card-description">{{ subtask.description }}</p>
+                            </div>
+                            <div class="priority-badge priority-badge-{{ subtask.priority }}">
+                                <span>{{ subtask.priority }}</span>
+                            </div>
+                            <i class="fi fi-rr-angle-small-right"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <div id="subject-material-card" class="card">
+                    <p>There are no subtasks. Create the first one!</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% url 'productivity_site:task_update' subject.subject_id task.task_id as edit_url %}
+    {% url 'productivity_site:task_delete' subject.subject_id task.task_id as delete_url %}
+    {% include "components/actions/floating_actions.html" with edit_url=edit_url delete_url=delete_url object_type="task" object_name=task.name delete_warning="Deleting this task will also delete its subtasks." %}
+
+{% endblock %}

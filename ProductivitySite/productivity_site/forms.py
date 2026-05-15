@@ -1,6 +1,6 @@
 from django import forms
 
-from productivity_site.models import Subject, Task
+from productivity_site.models import Subject, Task, Subtask
 
 
 class ContactForm(forms.Form):
@@ -72,6 +72,26 @@ class TaskForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"placeholder": "Task name", "class": "form-field"}),
             "text": forms.Textarea(attrs={"placeholder": "Describe the task...", "class": "form-field", "rows": 5}),
+            "due_date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-field"}),
+            "estimated_time": forms.NumberInput(attrs={"placeholder": "Minutes", "class": "form-field", "min": 1}),
+        }
+
+class SubtaskForm(forms.ModelForm):
+    class Meta:
+        model = Subtask
+        fields = ["name", "description", "due_date", "priority", "estimated_time"]
+
+        labels = {
+            "name": "Subtask name",
+            "description": "Description",
+            "due_date": "Due date",
+            "priority": "Priority",
+            "estimated_time": "Estimated time",
+        }
+
+        widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Subtask name", "class": "form-field"}),
+            "description": forms.Textarea(attrs={"placeholder": "Describe the subtask...", "class": "form-field", "rows": 5}),
             "due_date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-field"}),
             "estimated_time": forms.NumberInput(attrs={"placeholder": "Minutes", "class": "form-field", "min": 1}),
         }
