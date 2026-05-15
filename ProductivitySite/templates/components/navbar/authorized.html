@@ -1,10 +1,19 @@
+{% load static %}
 <div class="app-navbar-buttons">
+
     <span class="button app-navbar-button">
         <i class="fi fi-rc-moon"></i>
         <p>Dark theme</p>
     </span>
-    <span class="button app-navbar-button">
-        <i class="fi fi-rc-volume-mute"></i>
+
+    <span class="button app-navbar-button" id="musicButton">
+        <i class="fi fi-rc-volume-mute" id="musicIcon"></i>
         <p>Lofi live</p>
     </span>
+
 </div>
+
+<div id="youtube-player"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="{% static 'js/player.js' %}"></script>
