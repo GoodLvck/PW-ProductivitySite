@@ -32,14 +32,9 @@ function updateMusicUi() {
         return;
     }
     if (!playerReady) {
-        if (playing) {
-            musicIcon.className = 'fi fi-rc-volume';
-            musicLabel.textContent = 'Loading...';
-            setButtonState('is-loading');
-        } else {
-            musicIcon.className = 'fi fi-rc-volume-mute';
-            musicLabel.textContent = 'Lofi live';
-        }
+        musicIcon.className = playing ? 'fi fi-rc-volume' : 'fi fi-rc-volume-mute';
+        musicLabel.textContent = 'Lofi live';
+        setButtonState(null);
         return;
     }
 
@@ -76,7 +71,7 @@ function applyPlaybackFromState() {
                 localStorage.setItem(MUSIC_STATE_KEY, 'paused');
                 setButtonState('is-error');
                 if (musicLabel) {
-                    musicLabel.textContent = 'Autoplay block';
+                    musicLabel.textContent = 'Tap to play';
                 }
             }
         }, 1800);
@@ -156,15 +151,12 @@ function waitForYouTubeAndInit() {
 }
 
 updateMusicUi();
-if (playing) {
-    setButtonState('is-loading');
-}
 waitForYouTubeAndInit();
 
 if (musicButton) {
     musicButton.addEventListener('click', () => {
         if (!player || !playerReady) {
-            setButtonState('is-loading');
+            musicLabel.textContent = 'Preparing...';
             return;
         }
 
