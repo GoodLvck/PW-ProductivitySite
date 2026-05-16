@@ -192,6 +192,77 @@
     margin: 0;
 }
 
+/* -------------- Create / update form -------------- */
+.create-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+.create-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.create-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    padding: 1.5rem;
+}
+
+.create-form .form-group {
+    grid-column: span 2;
+}
+
+.create-form .form-group:has(.field-sm) {
+    grid-column: span 1;
+}
+
+.create-form .form-group:has(.color-field),
+.create-form .form-group:has(.select-field),
+.create-form .form-group:has(.datetime-field) {
+    grid-column: span 1;
+}
+
+.create-form label {
+    color: var(--foreground);
+    font-size: small;
+    font-weight: bolder;
+}
+
+.create-form input,
+.create-form textarea,
+.create-form select {
+    background-color: var(--background);
+    color: var(--foreground);
+    border-color: var(--border);
+}
+
+.create-form input:focus,
+.create-form textarea:focus,
+.create-form select:focus {
+    border-color: var(--primary);
+}
+
+.create-form input:hover,
+.create-form textarea:hover,
+.create-form select:hover {
+    border-color: var(--primary);
+}
+
+.create-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .75rem;
+    grid-column: span 2;
+    padding-top: .5rem;
+}
+
 /* -------------- Breadcrumb -------------- */
 .breadcrumb {
     color: var(--muted-foreground);

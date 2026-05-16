@@ -10,12 +10,9 @@
                 <p class="app-subtitle">{{ form_subtitle }}</p>
             </div>
 
-            <a href="{{ cancel_url }}" class="button button-secondary">
-                Back
-            </a>
         </div>
 
-        <form method="post" class="create-form">
+        <form method="post" class="create-form card">
             {% csrf_token %}
 
             {% include "components/forms/_form_fields.html" %}
@@ -25,7 +22,7 @@
                     Cancel
                 </a>
 
-                {% include "components/button/submit-button-primary.html" with text="Create" %}
+                {% include "components/button/submit-button-primary.html" with text=submit_label %}
             </div>
         </form>
     </div>

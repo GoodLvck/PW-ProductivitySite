@@ -72,7 +72,8 @@ class TaskForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"placeholder": "Task name", "class": "form-field"}),
             "text": forms.Textarea(attrs={"placeholder": "Describe the task...", "class": "form-field", "rows": 5}),
-            "due_date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-field"}),
+            "due_date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-field datetime-field"}),
+            "priority": forms.Select(attrs={"class": "form-field select-field"}),
             "estimated_time": forms.NumberInput(attrs={"placeholder": "Minutes", "class": "form-field", "min": 1}),
         }
 
@@ -92,6 +93,7 @@ class SubtaskForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"placeholder": "Subtask name", "class": "form-field"}),
             "description": forms.Textarea(attrs={"placeholder": "Describe the subtask...", "class": "form-field", "rows": 5}),
-            "due_date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-field"}),
+            "due_date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-field datetime-field"}),
+            "priority": forms.Select(attrs={"class": "form-field select-field"}),
             "estimated_time": forms.NumberInput(attrs={"placeholder": "Minutes", "class": "form-field", "min": 1}),
         }
