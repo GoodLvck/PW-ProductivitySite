@@ -11,7 +11,10 @@ a {
     border-radius: 10px;
     opacity: 1;
     transition: 0.3s;
-    height: inherit;
+    min-height: 2.25rem;
+    font: inherit;
+    line-height: 1;
+    box-sizing: border-box;
 }
 
 .button-icon {
