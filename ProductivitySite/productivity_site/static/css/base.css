@@ -35,6 +35,7 @@
     --background: hsl(150 15% 8%);
     --foreground: hsl(40 20% 92%);
     --card: hsl(150 12% 12%);
+    --card-foreground: hsl(40 20% 92%);
     --primary: hsl(130 30% 55%);
     --secondary: hsl(150 10% 18%);
     --muted: hsl(150 10% 18%);
