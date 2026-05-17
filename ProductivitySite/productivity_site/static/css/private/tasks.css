@@ -52,6 +52,16 @@
     cursor: pointer;
 }
 
+.subtask-toggle-form {
+    display: flex;
+    margin: 0;
+}
+
+.subtask-toggle-icon:disabled {
+    cursor: wait;
+    opacity: .6;
+}
+
 .subtask-card-texts {
     display: flex;
     flex-direction: column;
