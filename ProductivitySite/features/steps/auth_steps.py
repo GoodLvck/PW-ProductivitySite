@@ -40,10 +40,6 @@ def _current_path(context):
     return urlparse(context.browser.url).path
 
 
-def _wait(context, timeout=5):
-    return WebDriverWait(context.browser.driver, timeout)
-
-
 def _fill_by_label(context, label, value):
     label_key = label.strip().lower()
 
