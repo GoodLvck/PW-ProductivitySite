@@ -1,4 +1,5 @@
 {% extends "authorized/base_authorized.html" %}
+{% load static %}
 
 {% block title %} Subjects {% endblock %}
 
@@ -29,11 +30,17 @@
             <!-- Pending tasks -->
             <div class="subject-tasks-grid">
                 {% for task in pending_tasks %}
-                <div class="subject-task-card subject-card card"
+                <div class="subject-task-card subject-task-card-pending subject-card card"
                    style="border-left: .25rem solid {{ subject.color }}">
-                    <button type="button" id="{{ task.task_id }}" class="task-toggle-icon">
-                        <i class="fi fi-rr-circle"></i>
-                    </button>
+                    <form method="post"
+                          action="{% url 'productivity_site:task_toggle_completed' subject.subject_id task.task_id %}"
+                          class="task-toggle-form"
+                          {% if task.pending_subtasks_count > 0 %}data-confirm-message="This task still has {{ task.pending_subtasks_count }} incomplete subtask{{ task.pending_subtasks_count|pluralize }}. If you confirm, all subtasks will be marked as completed."{% endif %}>
+                        {% csrf_token %}
+                        <button type="submit" id="{{ task.task_id }}" class="task-toggle-icon">
+                            <i class="fi fi-rr-circle"></i>
+                        </button>
+                    </form>
                     <a href="{% url 'productivity_site:task_read' subject.subject_id task.task_id %}"
                        class="task-card-content">
                         <div class="subject-task-head">
@@ -67,22 +74,27 @@
                     <span>Completed ({{ completed_tasks|length}})</span>
                 </div>
                 <div class="subject-tasks-grid subject-completed-grid">
-                    {% for task in pending_tasks %}
-                    <a href="{% url 'productivity_site:task_read' subject.subject_id task.task_id %}"
-                       class="subject-task-card subject-task-card-completed subject-card card"
+                    {% for task in completed_tasks %}
+                    <div class="subject-task-card subject-task-card-completed subject-card card"
                        style="border-left: .25rem solid {{ subject.color }}">
-                        <div id="{{ task.task_id }}" class="task-toggle-icon">
-                            <i class="fi fi-rr-check-circle"></i>
-                        </div>
-                        <div class="task-card-content">
+                        <form method="post"
+                              action="{% url 'productivity_site:task_toggle_completed' subject.subject_id task.task_id %}"
+                              class="task-toggle-form">
+                            {% csrf_token %}
+                            <button type="submit" id="{{ task.task_id }}" class="task-toggle-icon">
+                                <i class="fi fi-rr-check-circle"></i>
+                            </button>
+                        </form>
+                        <a href="{% url 'productivity_site:task_read' subject.subject_id task.task_id %}"
+                           class="task-card-content">
                             <div class="subject-task-head">
                                 <div class="subject-task-info">
                                     <p class="subject-task-title">{{ task.name }}</p>
                                     <p class="subject-task-text">{{ task.text }}</p>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                     {% endfor %}
                 </div>
             {% endif %}
@@ -105,4 +117,25 @@
     {% url 'productivity_site:subject_delete' subject.subject_id as delete_url %}
     {% include "components/actions/floating_actions.html" with edit_url=edit_url delete_url=delete_url object_type="subject" object_name=subject.name delete_warning="Deleting this subject will also delete its tasks, subtasks, and related study material." %}
 
+    <div id="task-complete-confirmation" class="delete-popover" popover>
+        <h3>Complete task</h3>
+        <p>Are you sure you want to complete this task?</p>
+        <p id="task-complete-confirmation-message" class="delete-warning"></p>
+
+        <div class="delete-popover-actions">
+            <button type="button"
+                    class="button button-secondary"
+                    popovertarget="task-complete-confirmation"
+                    popovertargetaction="hide">
+                Cancel
+            </button>
+            <button type="button"
+                    id="task-complete-confirmation-submit"
+                    class="button button-primary">
+                Complete
+            </button>
+        </div>
+    </div>
+
+    <script src="{% static 'js/tasks.js' %}"></script>
 {% endblock %}

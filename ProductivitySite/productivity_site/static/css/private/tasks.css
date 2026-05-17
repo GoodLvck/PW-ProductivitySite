@@ -52,6 +52,16 @@
     cursor: pointer;
 }
 
+.subtask-toggle-form {
+    display: flex;
+    margin: 0;
+}
+
+.subtask-toggle-icon:disabled {
+    cursor: wait;
+    opacity: .6;
+}
+
 .subtask-card-texts {
     display: flex;
     flex-direction: column;
@@ -104,7 +114,21 @@
 }
 
 /* -------------- Subtask details -------------- */
+.subtask-status-form {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+.subtask-status-form input[type="hidden"] {
+    display: none;
+    flex: 0 0 0;
+    width: 0;
+    height: 0;
+}
+
 .subtask-status-card {
+    width: 100%;
     padding: 1rem 2rem;
     display: flex;
     align-items: center;

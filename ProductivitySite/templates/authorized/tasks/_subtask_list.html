@@ -1,0 +1,62 @@
+<div id="task-subtasks">
+    <div class="details-section-title">
+        <h3>Subtasks ({{ pending_subtasks|length }})</h3>
+        {% url 'productivity_site:subtask_create' subject.subject_id task.task_id as subtask_create_url %}
+        {% include "components/button/link-button-secondary.html" with icon_left='fi-rr-plus' text='Create subtask' href=subtask_create_url %}
+    </div>
+
+    {% for subtask in subtasks %}
+        {% if not subtask.completed %}
+            <div class="subtask-card subtask-card-pending card">
+                <form method="post"
+                      action="{% url 'productivity_site:subtask_toggle_completed' subject.subject_id task.task_id subtask.subtask_id %}"
+                      class="subtask-toggle-form">
+                    {% csrf_token %}
+                    <button type="submit" id="{{ subtask.subtask_id }}" class="subtask-toggle-icon">
+                        <i class="fi fi-rr-circle"></i>
+                    </button>
+                </form>
+                <a href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}"
+                   class="subtask-card-content">
+                    <div class="subtask-card-texts">
+                        <p class="subtask-card-name">{{ subtask.name }}</p>
+                        <div class="subtask-card-time">
+                            <i class="fi fi-rr-clock-five"></i>
+                            <span>{{ subtask.estimated_time }} min</span>
+                        </div>
+                    </div>
+                    <div class="priority-badge priority-badge-{{ subtask.priority }}">
+                        <span>{{ subtask.priority }}</span>
+                    </div>
+                    <i class="fi fi-rr-angle-small-right"></i>
+                </a>
+            </div>
+        {% else %}
+            <div class="subtask-card subtask-card-completed card">
+                <form method="post"
+                      action="{% url 'productivity_site:subtask_toggle_completed' subject.subject_id task.task_id subtask.subtask_id %}"
+                      class="subtask-toggle-form">
+                    {% csrf_token %}
+                    <button type="submit" id="{{ subtask.subtask_id }}" class="subtask-toggle-icon">
+                        <i class="fi fi-rr-check-circle"></i>
+                    </button>
+                </form>
+                <a href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}"
+                   class="subtask-card-content">
+                    <div class="subtask-card-texts">
+                        <p class="subtask-card-name">{{ subtask.name }}</p>
+                        <p class="subtask-card-description">{{ subtask.description }}</p>
+                    </div>
+                    <div class="priority-badge priority-badge-{{ subtask.priority }}">
+                        <span>{{ subtask.priority }}</span>
+                    </div>
+                    <i class="fi fi-rr-angle-small-right"></i>
+                </a>
+            </div>
+        {% endif %}
+    {% empty %}
+        <div id="subject-material-card" class="card">
+            <p>There are no subtasks. Create the first one!</p>
+        </div>
+    {% endfor %}
+</div>
