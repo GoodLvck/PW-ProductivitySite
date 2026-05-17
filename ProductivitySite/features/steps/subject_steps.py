@@ -136,6 +136,9 @@ def step_click_floating_button(context, text):
 
 @when('I change the name to "{name}"')
 def step_change_name(context, name):
+    _wait(context).until(
+        EC.presence_of_element_located((By.NAME, "name"))
+    )
     context.browser.fill("name", name)
 
 

@@ -135,7 +135,37 @@ def step_completed_task_exists(context):
         )
     context.current_task = task
 
-
+@given("a pending task with incomplete subtasks exists")
+def step_pending_task_with_subtasks(context):
+    from productivity_site.models import Subtask
+    subject = context.current_subject
+    task = Task.objects.create(
+        name="Task with subtasks",
+        subject_id=subject,
+        text="Test",
+        due_date=timezone.now() + timedelta(days=7),
+        priority="medium",
+        estimated_time=60,
+        completed=False,
+    )
+    Subtask.objects.create(
+        name="Pending subtask",
+        task_id=task,
+        description="Test",
+        due_date=timezone.now() + timedelta(days=7),
+        priority="medium",
+        estimated_time=30,
+        completed=False,
+    )
+    context.current_task = task
+    context.browser.visit(
+        f"{context.base_url}/subjects/{subject.subject_id}"
+    )
+    _wait(context).until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, f"button.task-toggle-icon[id='{task.task_id}']")
+        )
+    )
 # ---------------------------------------------------------------------------
 # When
 # ---------------------------------------------------------------------------
@@ -271,6 +301,41 @@ def step_click_checkmark(context):
     el = _wait(context).until(
         EC.element_to_be_clickable(
             (By.XPATH, "//*[contains(@class, 'task-toggle-icon')][.//*[contains(@class, 'fi-rr-check-circle')]]")
+        )
+    )
+    el.click()
+
+@when("I click the completion circle of that task")
+def step_click_circle_of_that_task(context):
+    task = context.current_task
+    print(f"\nBuscando botón con id='{task.task_id}', nombre='{task.name}'")
+    driver = context.browser.driver
+    # Verificar que el form tiene data-confirm-message
+    forms = driver.find_elements(By.CSS_SELECTOR, ".task-toggle-form[data-confirm-message]")
+    print(f"Forms con data-confirm-message: {len(forms)}")
+    el = _wait(context).until(
+        EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, f"button.task-toggle-icon[id='{task.task_id}']")
+        )
+    )
+    el.click()
+
+@when("I confirm the task completion")
+def step_confirm_task_completion(context):
+    el = _wait(context).until(
+        EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, "#task-complete-confirmation-submit")
+        )
+    )
+    el.click()
+
+@when("I cancel the task completion")
+def step_cancel_task_completion(context):
+    el = _wait(context).until(
+        EC.element_to_be_clickable(
+            (By.XPATH,
+             "//*[@popovertarget='task-complete-confirmation']"
+             "[@popovertargetaction='hide']")
         )
     )
     el.click()
@@ -415,3 +480,45 @@ def step_can_create_after_warning(context):
     current = _current_path(context)
     assert "/subjects/" in current, f"Expected to be on subject page, got {current}"
 
+@then("I see the confirmation popover with the incomplete subtasks warning")
+def step_see_confirmation_popover(context):
+    driver = context.browser.driver
+    _wait(context).until(
+        lambda d: d.find_element(
+            By.CSS_SELECTOR, "#task-complete-confirmation"
+        ).get_attribute("popover") is not None
+        and d.execute_script(
+            "return document.getElementById('task-complete-confirmation').matches(':popover-open')"
+        )
+    )
+    msg = driver.find_element(
+        By.CSS_SELECTOR, "#task-complete-confirmation-message"
+    ).text
+    assert "subtask" in msg.lower(), \
+        f"Expected subtask warning in popover, got: {msg}"
+
+@then("the task remains in the pending section")
+def step_task_remains_pending(context):
+    task = context.current_task
+    _wait(context).until(
+        EC.presence_of_element_located(
+            (By.XPATH,
+             f"//*[contains(@class,'subject-task-card-pending')]"
+             f"[.//*[normalize-space(text())='{task.name}']]")
+        )
+    )
+
+
+@then("the heading shows one fewer pending task")
+def step_heading_one_fewer_pending(context):
+    subject = context.current_subject
+    from productivity_site.models import Task as TaskModel
+    pending_in_db = TaskModel.objects.filter(
+        subject_id=subject, completed=False
+    ).count()
+    _wait(context).until(
+        EC.text_to_be_present_in_element(
+            (By.CSS_SELECTOR, "#subject-tasks .details-section-title h3"),
+            f"Tasks ({pending_in_db})"
+        )
+    )
