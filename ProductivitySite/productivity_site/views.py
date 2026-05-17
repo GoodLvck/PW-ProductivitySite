@@ -1,22 +1,22 @@
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.core.mail import BadHeaderError
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.views.generic import CreateView
-from django.urls import reverse_lazy, reverse
 from django.db.models import Count
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy, reverse
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.generic import CreateView
 
 from .forms import ContactForm, SubjectForm, TaskForm, SubtaskForm
-from django.conf import settings
-
 from .models import Subject, Task, subject, Subtask
 
 
@@ -45,6 +45,17 @@ def _subtask_list_context(task, subject):
         "subtasks": subtasks,
         "pending_subtasks": subtasks.filter(completed=False),
     }
+
+
+def _redirect_to_referer(request):
+    referer_url = request.META.get("HTTP_REFERER")
+    if referer_url and url_has_allowed_host_and_scheme(
+        url=referer_url,
+        allowed_hosts={request.get_host()},
+    ):
+        return redirect(referer_url)
+
+    return None
 
 
 # ------------------ Landing page ------------------------
@@ -255,6 +266,10 @@ def task_toggle_completed(request, subject_id, task_id):
                 completed=False,
             ).update(completed=True)
 
+    referer_redirect = _redirect_to_referer(request)
+    if referer_redirect:
+        return referer_redirect
+
     return redirect("productivity_site:subject_read", subject_id=subject_id)
 
 @login_required
@@ -333,8 +348,9 @@ def task_create(request, subject_id):
 def task_read(request, subject_id, task_id):
     task = get_object_or_404(Task, pk=task_id, subject_id=subject_id)
     subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
+    _set_pending_subtasks_count([task])
 
-    context = _subtask_list_context(task, subject);
+    context = _subtask_list_context(task, subject)
 
     return render(request, "authorized/tasks/task_view.html", context)
 
@@ -492,12 +508,16 @@ def subtask_toggle_completed(request, subject_id, task_id, subtask_id):
     if request.method == "POST":
         task = subtask.task_id
         subtask.completed = not subtask.completed
+        task_was_changed = False
 
         if not subtask.completed and task.completed:
             task.completed = False
+            task_was_changed = True
 
         subtask.save(update_fields=["completed"])
-        task.save(update_fields=["completed"])
+
+        if task_was_changed:
+            task.save(update_fields=["completed"])
 
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
         task = subtask.task_id
@@ -509,18 +529,37 @@ def subtask_toggle_completed(request, subject_id, task_id, subtask_id):
                 "subtask": subtask,
             })
 
-        return render(
-            request,
-            "authorized/tasks/_subtask_list.html",
-            _subtask_list_context(task, subject),
-        )
+        subtask_list_context = _subtask_list_context(task, subject)
 
-    referer_url = request.META.get("HTTP_REFERER")
-    if referer_url and url_has_allowed_host_and_scheme(
-        url=referer_url,
-        allowed_hosts={request.get_host()},
-    ):
-        return redirect(referer_url)
+        if request.headers.get("x-update-task-status") != "true":
+            return render(
+                request,
+                "authorized/tasks/_subtask_list.html",
+                subtask_list_context,
+            )
+
+        _set_pending_subtasks_count([task])
+        task_status_context = {
+            "subject": subject,
+            "task": task,
+        }
+
+        return JsonResponse({
+            "subtask_list_html": render_to_string(
+                "authorized/tasks/_subtask_list.html",
+                subtask_list_context,
+                request=request,
+            ),
+            "task_status_html": render_to_string(
+                "authorized/tasks/_task_status.html",
+                task_status_context,
+                request=request,
+            ),
+        })
+
+    referer_redirect = _redirect_to_referer(request)
+    if referer_redirect:
+        return referer_redirect
 
     return redirect(
         "productivity_site:task_read",
