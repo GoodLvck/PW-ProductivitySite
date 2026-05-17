@@ -20,28 +20,30 @@
             <p>{{ task.text }}</p>
         </div>
 
-        <!-- Task status -->
-        <div id="task-status-container">
-            {% include "authorized/tasks/_task_status.html" %}
-        </div>
+        <div class="task-details-cards">
+            <!-- Task status -->
+            <div id="task-status-container">
+                {% include "authorized/tasks/_task_status.html" %}
+            </div>
 
-        <!-- Task details card -->
-        <div class="task-details-card card"
-             style="border-left: .25rem solid {{ subject.color }}">
-            <p>{{ task.text }}</p>
-            <div class="task-details-card-meta">
-                <div class="task-details-card-meta-item">
-                    <i class="fi fi-rr-clock-five"></i>
-                    <span>{{ task.estimated_time }} min</span>
-                </div>
-                <div class="task-details-card-meta-item">
-                    <span class="task-details-meta-label">Due date:</span>
-                    <span class="task-details-meta-text">{{ task.due_date | date:"j M" }}</span>
-                </div>
-                <div class="task-details-card-meta-item">
-                    <span class="task-details-meta-label">Priority:</span>
-                    <div class="priority-badge priority-badge-{{ task.priority }}">
-                        <span>{{ task.priority }}</span>
+            <!-- Task details card -->
+            <div class="task-details-card card"
+                 style="border-left: .25rem solid {{ subject.color }}">
+                <p>{{ task.text }}</p>
+                <div class="task-details-card-meta">
+                    <div class="task-details-card-meta-item">
+                        <i class="fi fi-rr-clock-five"></i>
+                        <span>{{ task.estimated_time }} min</span>
+                    </div>
+                    <div class="task-details-card-meta-item">
+                        <span class="task-details-meta-label">Due date:</span>
+                        <span class="task-details-meta-text">{{ task.due_date | date:"j M" }}</span>
+                    </div>
+                    <div class="task-details-card-meta-item">
+                        <span class="task-details-meta-label">Priority:</span>
+                        <div class="priority-badge priority-badge-{{ task.priority }}">
+                            <span>{{ task.priority }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
