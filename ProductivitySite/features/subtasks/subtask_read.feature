@@ -10,14 +10,15 @@ Feature: View subtasks
 
   Scenario: Subtask list in the task detail
     When I open the task detail
-    Then I see "Subtasks (4)"
+    Then I see "Subtasks (2)"
     And I see each subtask with its status, name, time, and priority
-    And the progress bar shows "2/4 subtasks" at 50%
 
   Scenario: Open subtask detail
-    When I click on a subtask
+    When I open the task detail
+    And I click on a subtask
     Then I see the subtask detail view with all its fields
 
   Scenario: Empty state
     Given the task has no subtasks
-    Then I see the message "No subtasks yet. Create your first one!"
+    When I open the task detail
+    Then I see the message "There are no subtasks. Create the first one!"

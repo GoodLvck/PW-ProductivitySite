@@ -334,9 +334,9 @@ def task_read(request, subject_id, task_id):
     task = get_object_or_404(Task, pk=task_id, subject_id=subject_id)
     subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
 
-    return render(request, "authorized/tasks/task_view.html", {
-        **_subtask_list_context(task, subject),
-    })
+    context = _subtask_list_context(task, subject);
+
+    return render(request, "authorized/tasks/task_view.html", context)
 
 @login_required
 def task_update(request, subject_id, task_id):

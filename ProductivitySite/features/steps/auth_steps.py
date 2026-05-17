@@ -40,10 +40,6 @@ def _current_path(context):
     return urlparse(context.browser.url).path
 
 
-def _wait(context, timeout=5):
-    return WebDriverWait(context.browser.driver, timeout)
-
-
 def _fill_by_label(context, label, value):
     label_key = label.strip().lower()
 
@@ -253,6 +249,7 @@ def step_see_message(context, message):
         "Password must be at least 8 characters": "This password is too short.",
         "Name is required": "This field is required.",
         "No tasks yet. Create your first one!": "NO PENDING TASKS!!",
+        "No subtasks yet. Create your first one!": "There are no subtasks. Create the first one!",
     }
 
     if message in required_messages:

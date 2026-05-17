@@ -1,10 +1,15 @@
 <div id="task-subtasks">
     <div class="details-section-title">
         <h3>Subtasks ({{ pending_subtasks|length }})</h3>
+            <!-- Generate with AI -->
+{#        {% url 'productivity_site:subtask_create' task.subject_id as task_create_url %}#}
+{#        {% include "components/button/link-button-secondary.html" with icon_left='fi-rr-plus' text='Create task' href=task_create_url %}#}
+        <!-- Create subtask-->
         {% url 'productivity_site:subtask_create' subject.subject_id task.task_id as subtask_create_url %}
         {% include "components/button/link-button-secondary.html" with icon_left='fi-rr-plus' text='Create subtask' href=subtask_create_url %}
     </div>
 
+    <!-- Subtasks -->
     {% for subtask in subtasks %}
         {% if not subtask.completed %}
             <div class="subtask-card subtask-card-pending card">
@@ -45,7 +50,10 @@
                    class="subtask-card-content">
                     <div class="subtask-card-texts">
                         <p class="subtask-card-name">{{ subtask.name }}</p>
-                        <p class="subtask-card-description">{{ subtask.description }}</p>
+                        <div class="subtask-card-time">
+                            <i class="fi fi-rr-clock-five"></i>
+                            <span>{{ subtask.estimated_time }} min</span>
+                        </div>
                     </div>
                     <div class="priority-badge priority-badge-{{ subtask.priority }}">
                         <span>{{ subtask.priority }}</span>
