@@ -7,20 +7,14 @@ Feature: Login
     Given I am on the "/login" page
 
   Scenario: Successful login
-    When I fill in "Username" with "testuser"
-    And I fill in "Password" with "TestPass123!"
+    When I enter "testuser" in "Username"
+    And I enter "TestPass123!" in "Password"
     And I click "Log in"
     Then I am redirected to "/dashboard"
     And I see the sidebar with my session active
 
   Scenario: Invalid credentials
-    When I fill in "Username" with "nonexistent_user"
-    And I fill in "Password" with "wrongpassword"
+    When I enter an invalid username or password
     And I click "Log in"
-    Then I see the message "Please enter a correct username and password"
+    Then I see the message "Invalid credentials"
     And I remain on "/login"
-
-#  Scenario: Access the password recovery page
-#    # Password recovery link not present in the current login template
-#    When I click the "Forgot your password?" link
-#    Then I am redirected to "/recover-password"

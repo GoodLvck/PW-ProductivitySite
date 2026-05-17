@@ -7,39 +7,35 @@ Feature: User registration
     Given I am on the "/register" page
 
   Scenario: Successful registration with valid data
-    When I fill in "First name" with "Ana"
-    And I fill in "Last name" with "Lopez"
-    And I fill in "Username" with "newuser2026"
-    And I fill in "Email address" with "newuser2026@example.com"
-    And I fill in "Password" with "Secret123!"
-    And I fill in "Password confirmation" with "Secret123!"
-    And I click "Create account"
-    Then I am redirected to "/login"
+    When I enter "Ana" in the "First name" field
+    And I enter "López" in the "Last name" field
+    And I enter "ana" in the "Username" field
+    And I enter "ana@example.com" in the "Email" field
+    And I enter "Secret123!" in the "Password" field
+    And I click the "Create account" button
+    Then my account is created
+    And I am redirected to "/login"
 
-  @wip
-  Scenario: Username already taken
-    Given a user with username "testuser" already exists
-    When I fill in "Username" with "testuser"
-    And I fill in "Password" with "Secret123!"
-    And I fill in "Password confirmation" with "Secret123!"
-    And I click "Create account"
-    Then I see the error message "A user with that username already exists."
+  Scenario: Email already registered
+    Given a user with email "ana@example.com" already exists
+    When I try to register with that same email
+    Then I see the error message "Email is already in use"
     And I remain on "/register"
 
-  @wip
   Scenario: Weak password
-    When I fill in "Username" with "weakpwduser"
-    And I fill in "Password" with "short"
-    And I fill in "Password confirmation" with "short"
+    When I enter a password shorter than 8 characters
     And I click "Create account"
-    Then I see the error message "This password is too short"
+    Then I see the error message "Password must be at least 8 characters"
 
-#  Scenario Outline: Required field validation
-#    When I leave the "<field>" field empty
-#    And I click "Create account"
-#    Then I see the message "<message>"
-#
-#    Examples:
-#      | field    | message                |
-#      | Username | This field is required |
-#      | Password | This field is required |
+  Scenario Outline: Required field validation
+    When I leave the "<field>" field empty
+    And I click "Create account"
+    Then I see the message "<message>"
+
+    Examples:
+      | field      | message                |
+      | First name | First name is required |
+      | Last name  | Last name is required  |
+      | Username   | Username is required   |
+      | Email      | Email is required      |
+      | Password   | Password is required   |
