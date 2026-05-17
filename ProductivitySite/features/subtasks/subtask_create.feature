@@ -19,6 +19,17 @@ Feature: Create subtask
     Then the subtask "Solve exercise 1" appears in the list
     And the subtask counter increases by 1
 
+  Scenario: Created subtask appears as pending by default
+    When I click "Create subtask"
+    And I fill in "Name" with "Solve exercise 2"
+    And I fill in "Description" with "Test description"
+    And I set estimated time to 15
+    And I select due date "2026-06-01"
+    And I select priority "low"
+    And I click "Create"
+    Then the subtask "Solve exercise 2" appears in the list
+    And the subtask "Solve exercise 2" is shown as pending
+
 #  Scenario: Generate subtasks with AI
 #    Given the task has no subtasks yet
 #    When I click "Generate with AI"
