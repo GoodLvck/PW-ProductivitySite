@@ -9,9 +9,11 @@ Feature: Create subtask
     And I am on the detail of task "Submit chapter 3 problems"
 
   Scenario: Create a subtask manually
-    When I click "New subtask"
+    When I click "Create subtask"
     And I fill in "Name" with "Solve exercise 1"
+    And I fill in "Description" with "Test description"
     And I set estimated time to 30
+    And I select due date "2026-06-01"
     And I select priority "medium"
     And I click "Create"
     Then the subtask "Solve exercise 1" appears in the list
@@ -28,6 +30,7 @@ Feature: Create subtask
 #    Then the "Generate with AI" button is disabled
 
   Scenario: Required name validation
-    When I click "New subtask"
-    And I leave "Name" empty
-    Then the "Create" button remains disabled
+    When I click "Create subtask"
+    And I leave the "Name" field empty
+    And I click "Create"
+    Then I see the message "Name is required"

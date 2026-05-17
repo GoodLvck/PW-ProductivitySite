@@ -3,20 +3,15 @@ from urllib.parse import urlparse
 from behave import given, when, then
 from django.contrib.auth.models import User
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.expected_conditions import visibility_of_element_located
-from features.steps.common import _click_button, _wait
+from features.steps.common import  _wait
 
 from productivity_site.models import Subject
 
 
 def _current_path(context):
     return urlparse(context.browser.url).path
-
-
-def _wait(context, timeout=10):
-    return WebDriverWait(context.browser.driver, timeout)
 
 
 def _get_test_user(context):
