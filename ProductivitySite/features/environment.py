@@ -32,6 +32,8 @@ TEST_USER = {
 # Base URL of the running Django development server
 BASE_URL = os.environ.get("TEST_SERVER_URL", "http://localhost:8000")
 
+BROWSER = os.environ.get("BROWSER", "firefox").lower()
+HEADLESS = os.environ.get("HEADLESS", "true").lower() == "true"
 
 # ---------------------------------------------------------------------------
 # Browser factories
@@ -58,15 +60,22 @@ def chrome_browser(headless=True):
 
 
 def firefox_browser(headless=True):
-    return Browser("firefox", headless=headless)
-
+    from selenium.webdriver.firefox.options import Options
+    firefox_options = Options()
+    if headless:
+        firefox_options.add_argument("-headless")
+    return Browser("firefox", options=firefox_options)
 
 # ---------------------------------------------------------------------------
 # Behave hooks
 # ---------------------------------------------------------------------------
 
 def before_all(context):
-    context.browser = chrome_browser(headless=True)
+    context.browser = firefox_browser(headless=True)
+    if BROWSER == "chrome":
+        context.browser = chrome_browser(headless=HEADLESS)
+    else:
+        context.browser = firefox_browser(headless=HEADLESS)
     # Alternatively, use `firefox_browser` and headless=False to see the browser while testing
     context.base_url = BASE_URL
     context.test_user = TEST_USER
@@ -109,3 +118,7 @@ def after_step(context, step):
         os.makedirs("screenshots", exist_ok=True)
         filename = f"screenshots/{feature}__{scenario}__{step_name}.png"
         context.browser.driver.save_screenshot(filename)
+
+def before_scenario(context, scenario):
+    User.objects.filter(username="ana").delete()
+    context.browser.visit(f"{context.base_url}/logout/")
