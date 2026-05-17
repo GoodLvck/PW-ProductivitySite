@@ -112,10 +112,15 @@ def after_step(context, step):
         context.browser.driver.save_screenshot(filename)
 
 def before_scenario(context, scenario):
-    from django.contrib.auth.models import User
-    from productivity_site.models import Subject
+    from productivity_site.models import Subject, Task, Subtask
     User.objects.filter(username="ana").delete()
     user = User.objects.filter(username="testuser").first()
     if user:
-        Subject.objects.filter(user_id=user).delete()
+        subjects = Subject.objects.filter(user_id=user)
+        for subject in subjects:
+            tasks = Task.objects.filter(subject_id=subject)
+            for task in tasks:
+                Subtask.objects.filter(task_id=task).delete()
+            tasks.delete()
+        subjects.delete()
     context.browser.visit(f"{context.base_url}/logout/")

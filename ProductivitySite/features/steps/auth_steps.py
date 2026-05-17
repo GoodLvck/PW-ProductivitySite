@@ -253,6 +253,7 @@ def step_see_message(context, message):
         "Password must be at least 8 characters": "This password is too short.",
         "Name is required": "This field is required.",
         "No tasks yet. Create your first one!": "NO PENDING TASKS!!",
+        "No subtasks yet. Create your first one!": "There are no subtasks. Create the first one!",
     }
 
     if message in required_messages:

@@ -7,8 +7,8 @@ Feature: Delete subtask
   Scenario: Confirmed deletion
     Given I am logged in
     And I am on the subtask detail page
-    When I click "Edit"
-    And I click "Delete subtask"
+    When I click the floating "Edit" button
+    And I click "Delete"
     And I confirm
     Then I am returned to the task detail page
     And the subtask no longer appears in the list
@@ -17,6 +17,6 @@ Feature: Delete subtask
   Scenario: Cancel deletion
     Given I am logged in
     And I am on the subtask detail page
-    When I click "Delete subtask"
+    When I click "Delete"
     And I cancel the confirmation
     Then the subtask still exists
