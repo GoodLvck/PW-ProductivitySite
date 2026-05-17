@@ -26,7 +26,8 @@ Feature: View subjects
   @wip
   Scenario: Open subject detail
     Given the subject "Mathematics" exists
-    When I click on the "Mathematics" card
+    When I navigate to "/subjects"
+    And I click on the "Mathematics" card
     Then I see the detail view with its name, description, and task list
     And I see the breadcrumb "Subjects / Mathematics"
 

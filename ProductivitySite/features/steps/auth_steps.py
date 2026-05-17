@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.expected_conditions import visibility_of_element_located
+from features.steps.common import _click_button, _wait
 
 ROUTE_ALIASES = {
     "/login": "/accounts/login/",
@@ -80,31 +81,6 @@ def _fill_by_label(context, label, value):
     field = FIELD_ALIASES.get(label_key, label_key)
     context.browser.fill(field, value)
 
-
-def _click_button(context, text):
-    label = text.strip().lower()
-    driver = context.browser.driver
-
-    # Busca botones y enlaces con ese texto
-    try:
-        el = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable(
-                (By.XPATH, f"//*[self::button or self::a][normalize-space(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'))='{label}']")
-            )
-        )
-        el.click()
-        return
-    except Exception:
-        pass
-
-    # Fallback: submit button
-    try:
-        el = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
-        )
-        el.click()
-    except Exception as e:
-        raise AssertionError(f"Could not find button or link '{text}': {e}")
 
 # ---------------------------------------------------------------------------
 # Given
@@ -275,6 +251,7 @@ def step_see_message(context, message):
         "Invalid credentials": "Please enter a correct username and password.",
         "Email is already in use": "A user with that username already exists.",
         "Password must be at least 8 characters": "This password is too short.",
+        "Name is required": "This field is required.",
     }
 
     if message in required_messages:

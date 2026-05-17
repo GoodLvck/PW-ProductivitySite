@@ -9,7 +9,7 @@ Feature: Create subject
 
   @wip
   Scenario: Create a subject with valid data
-    When I click "New subject"
+    When I click "Create subject"
     And I fill in "Name" with "Mathematics"
     And I fill in "Description" with "Calculus and algebra"
     And I select color "#7d9b76"
@@ -19,15 +19,15 @@ Feature: Create subject
 
   @wip
   Scenario: Required name validation
-    When I click "New subject"
+    When I click "Create subject"
     And I leave the "Name" field empty
     And I click "Create"
-    Then the "Create" button remains disabled
+    Then I see the message "Name is required"
     And the subject is not created
 
   @wip
   Scenario: Cancel creation
-    When I click "New subject"
+    When I click "Create subject"
     And I fill in "Name" with "History"
     And I click "Cancel"
     Then the dialog closes
@@ -36,7 +36,7 @@ Feature: Create subject
   @wip
   Scenario: Subject name must be unique
     Given a subject named "Mathematics" already exists
-    When I click "New subject"
+    When I click "Create subject"
     And I fill in "Name" with "Mathematics"
     And I click "Create"
     Then I see the error message "A subject with that name already exists"

@@ -9,7 +9,7 @@ Feature: Edit subject
     And I am on the detail page of subject "Mathematics"
 
   Scenario: Edit name and description
-    When I click the floating "Edit" button
+    When I click "Edit"
     And I change the name to "Advanced Mathematics"
     And I change the description to "Calculus III"
     And I click "Save"
