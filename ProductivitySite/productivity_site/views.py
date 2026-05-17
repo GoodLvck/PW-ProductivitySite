@@ -11,11 +11,27 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import CreateView
 from django.urls import reverse_lazy, reverse
+from django.db.models import Count
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .forms import ContactForm, SubjectForm, TaskForm, SubtaskForm
 from django.conf import settings
 
 from .models import Subject, Task, subject, Subtask
+
+
+def _set_pending_subtasks_count(tasks):
+    task_ids = [task.task_id for task in tasks]
+    pending_counts = {
+        item["task_id"]: item["count"]
+        for item in Subtask.objects.filter(
+            task_id__in=task_ids,
+            completed=False,
+        ).values("task_id").annotate(count=Count("subtask_id"))
+    }
+
+    for task in tasks:
+        task.pending_subtasks_count = pending_counts.get(task.task_id, 0)
 
 
 def _subtask_list_context(task, subject):
@@ -202,21 +218,44 @@ def subject_create(request):
 def subject_read(request, subject_id):
     subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
 
-    pending_tasks = Task.objects.filter(
+    pending_tasks = list(Task.objects.filter(
         subject_id=subject,
         completed=False,
-    )
+    ))
 
-    completed_tasks = Task.objects.filter(
+    completed_tasks = list(Task.objects.filter(
         subject_id=subject,
         completed=True,
-    )
+    ))
+
+    _set_pending_subtasks_count(pending_tasks)
 
     return render(request, "authorized/subjects/subject_view.html", {
         "subject": subject,
         "pending_tasks": pending_tasks,
         "completed_tasks": completed_tasks,
     })
+
+@login_required
+def task_toggle_completed(request, subject_id, task_id):
+    task = get_object_or_404(
+        Task,
+        task_id=task_id,
+        subject_id__subject_id=subject_id,
+        subject_id__user_id=request.user,
+    )
+
+    if request.method == "POST":
+        task.completed = not task.completed
+        task.save(update_fields=["completed"])
+
+        if task.completed:
+            Subtask.objects.filter(
+                task_id=task,
+                completed=False,
+            ).update(completed=True)
+
+    return redirect("productivity_site:subject_read", subject_id=subject_id)
 
 @login_required
 def subject_update(request, subject_id):
@@ -367,6 +406,10 @@ def subtask_create(request, subject_id, task_id):
             subtask.task_id = task
             subtask.save()
 
+            if task.completed:
+                task.completed = False
+                task.save()
+
             return redirect(
                 "productivity_site:task_read",
                 subject_id=subject_id,
@@ -447,17 +490,37 @@ def subtask_toggle_completed(request, subject_id, task_id, subtask_id):
     )
 
     if request.method == "POST":
+        task = subtask.task_id
         subtask.completed = not subtask.completed
+
+        if not subtask.completed and task.completed:
+            task.completed = False
+
         subtask.save(update_fields=["completed"])
+        task.save(update_fields=["completed"])
 
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
         task = subtask.task_id
         subject = task.subject_id
+        if request.headers.get("x-subtask-detail") == "true":
+            return render(request, "authorized/subtasks/_subtask_status.html", {
+                "subject": subject,
+                "task": task,
+                "subtask": subtask,
+            })
+
         return render(
             request,
             "authorized/tasks/_subtask_list.html",
             _subtask_list_context(task, subject),
         )
+
+    referer_url = request.META.get("HTTP_REFERER")
+    if referer_url and url_has_allowed_host_and_scheme(
+        url=referer_url,
+        allowed_hosts={request.get_host()},
+    ):
+        return redirect(referer_url)
 
     return redirect(
         "productivity_site:task_read",

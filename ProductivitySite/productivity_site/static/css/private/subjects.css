@@ -126,6 +126,11 @@
     cursor: pointer;
 }
 
+.task-toggle-form {
+    display: flex;
+    margin: 0;
+}
+
 .task-card-content {
     display: flex;
     flex-direction: column;
@@ -209,5 +214,4 @@
     font-weight: lighter;
     margin: 0;
 }
-
 

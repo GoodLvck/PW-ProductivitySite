@@ -114,7 +114,21 @@
 }
 
 /* -------------- Subtask details -------------- */
+.subtask-status-form {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+.subtask-status-form input[type="hidden"] {
+    display: none;
+    flex: 0 0 0;
+    width: 0;
+    height: 0;
+}
+
 .subtask-status-card {
+    width: 100%;
     padding: 1rem 2rem;
     display: flex;
     align-items: center;

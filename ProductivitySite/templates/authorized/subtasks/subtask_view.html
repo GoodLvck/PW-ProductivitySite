@@ -1,4 +1,5 @@
 {% extends "authorized/base_authorized.html" %}
+{% load static %}
 
 {% block title %}{{ subtask.name }}{% endblock %}
 
@@ -22,27 +23,7 @@
         </div>
 
         <!-- Subtask status -->
-        <button type="button"
-                class="subtask-status-card card{% if subtask.completed %} is-completed{% endif %}"
-                style="border-left: .25rem solid {{ subject.color }}">
-            <span class="subtask-status-icon">
-                {% if subtask.completed %}
-                    <i class="fi fi-rr-check-circle"></i>
-                {% else %}
-                    <i class="fi fi-rr-circle"></i>
-                {% endif %}
-            </span>
-            <span class="subtask-status-texts">
-                <span class="subtask-status-title">
-                    {% if subtask.completed %}
-                        Completed
-                    {% else %}
-                        Pending
-                    {% endif %}
-                </span>
-                <span class="subtask-status-subtitle">Tap to change status</span>
-            </span>
-        </button>
+        {% include "authorized/subtasks/_subtask_status.html" %}
 
         <!-- Subtask details -->
         <div class="subtask-details-card card">
@@ -74,4 +55,5 @@
     {% url 'productivity_site:subtask_update' subject.subject_id task.task_id subtask.subtask_id as edit_url %}
     {% url 'productivity_site:subtask_delete' subject.subject_id task.task_id subtask.subtask_id as delete_url %}
     {% include "components/actions/floating_actions.html" with edit_url=edit_url delete_url=delete_url object_type="subtask" object_name=subtask.name delete_warning="Only this subtask will be deleted." %}
+    <script src="{% static 'js/subtask-detail.js' %}"></script>
 {% endblock %}
