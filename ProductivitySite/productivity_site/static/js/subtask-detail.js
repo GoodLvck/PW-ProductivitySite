@@ -7,9 +7,6 @@ document.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
-    const submitButton = form.querySelector("button[type='submit']");
-    submitButton.disabled = true;
-
     try {
         const response = await fetch(form.action, {
             method: "POST",

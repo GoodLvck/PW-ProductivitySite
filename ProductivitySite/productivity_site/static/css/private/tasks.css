@@ -57,11 +57,6 @@
     margin: 0;
 }
 
-.subtask-toggle-icon:disabled {
-    cursor: wait;
-    opacity: .6;
-}
-
 .subtask-card-texts {
     display: flex;
     flex-direction: column;
@@ -114,20 +109,23 @@
 }
 
 /* -------------- Subtask details -------------- */
-.subtask-status-form {
+.subtask-status-form,
+.task-status-form {
     display: block;
     width: 100%;
     margin: 0;
 }
 
-.subtask-status-form input[type="hidden"] {
+.subtask-status-form input[type="hidden"],
+.task-status-form input[type="hidden"] {
     display: none;
     flex: 0 0 0;
     width: 0;
     height: 0;
 }
 
-.subtask-status-card {
+.subtask-status-card,
+.task-status-card {
     width: 100%;
     padding: 1rem 2rem;
     display: flex;
@@ -137,26 +135,30 @@
     text-align: left;
 }
 
-.subtask-status-icon {
+.subtask-status-icon,
+.task-status-icon {
     display: inline-flex;
     align-items: center;
     font-size: x-large;
 }
 
-.subtask-status-texts {
+.subtask-status-texts,
+.task-status-texts {
     display: flex;
     flex-direction: column;
     gap: .5rem;
 }
 
-.subtask-status-title {
+.subtask-status-title,
+.task-status-title {
     display: block;
     color: var(--foreground);
     font-weight: bolder;
     font-size: large;
 }
 
-.subtask-status-subtitle {
+.subtask-status-subtitle,
+.task-status-subtitle {
     color: var(--muted-foreground);
     font-weight: lighter !important;
 }

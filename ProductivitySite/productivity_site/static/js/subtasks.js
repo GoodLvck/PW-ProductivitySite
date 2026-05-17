@@ -7,15 +7,13 @@ document.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
-    const submitButton = form.querySelector("button[type='submit']");
-    submitButton.disabled = true;
-
     try {
         const response = await fetch(form.action, {
             method: "POST",
             body: new FormData(form),
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
+                "X-Update-Task-Status": "true",
             },
         });
 
@@ -24,9 +22,27 @@ document.addEventListener("submit", async (event) => {
             return;
         }
 
-        const html = await response.text();
+        const contentType = response.headers.get("content-type") || "";
         const currentList = document.getElementById("task-subtasks");
-        currentList.outerHTML = html;
+
+        if (contentType.includes("application/json")) {
+            const data = await response.json();
+            const taskStatusContainer = document.getElementById("task-status-container");
+
+            if (taskStatusContainer && data.task_status_html) {
+                taskStatusContainer.innerHTML = data.task_status_html;
+            }
+
+            if (currentList && data.subtask_list_html) {
+                currentList.outerHTML = data.subtask_list_html;
+            }
+            return;
+        }
+
+        const html = await response.text();
+        if (currentList) {
+            currentList.outerHTML = html;
+        }
     } catch {
         form.submit();
     }

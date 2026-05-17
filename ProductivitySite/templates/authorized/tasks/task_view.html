@@ -20,6 +20,11 @@
             <p>{{ task.text }}</p>
         </div>
 
+        <!-- Task status -->
+        <div id="task-status-container">
+            {% include "authorized/tasks/_task_status.html" %}
+        </div>
+
         <!-- Task details card -->
         <div class="task-details-card card"
              style="border-left: .25rem solid {{ subject.color }}">
@@ -50,5 +55,26 @@
     {% url 'productivity_site:task_delete' subject.subject_id task.task_id as delete_url %}
     {% include "components/actions/floating_actions.html" with edit_url=edit_url delete_url=delete_url object_type="task" object_name=task.name delete_warning="Deleting this task will also delete its subtasks." %}
 
+    <div id="task-complete-confirmation" class="delete-popover" popover>
+        <h3>Complete task</h3>
+        <p>Are you sure you want to complete this task?</p>
+        <p id="task-complete-confirmation-message" class="delete-warning"></p>
+
+        <div class="delete-popover-actions">
+            <button type="button"
+                    class="button button-secondary"
+                    popovertarget="task-complete-confirmation"
+                    popovertargetaction="hide">
+                Cancel
+            </button>
+            <button type="button"
+                    id="task-complete-confirmation-submit"
+                    class="button button-primary">
+                Complete
+            </button>
+        </div>
+    </div>
+
     <script src="{% static 'js/subtasks.js' %}"></script>
+    <script src="{% static 'js/tasks.js' %}"></script>
 {% endblock %}
