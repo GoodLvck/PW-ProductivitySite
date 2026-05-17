@@ -26,8 +26,3 @@ Feature: Sidebar navigation
     When I click it again
     Then the sidebar expands showing icons and labels
 
-#  Scenario: Sidebar on mobile
-#    Given the viewport is mobile
-#    When I click the sidebar toggle
-#    Then the sidebar opens as an overlay
-#    And clicking outside closes it
