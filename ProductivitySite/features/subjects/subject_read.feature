@@ -31,6 +31,11 @@ Feature: View subjects
     Then I see the detail view with its name, description, and task list
     And I see the breadcrumb "Subjects / Mathematics"
 
+  Scenario: User cannot access another user's subject
+    Given a subject owned by another user exists
+    When I navigate to that subject's URL
+    Then I see a 404 page
+
 #  @wip
 #  Scenario: Subject card shows task summary
 #    Given the subject "Mathematics" has 3 pending tasks and 1 completed task

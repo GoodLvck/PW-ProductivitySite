@@ -136,6 +136,9 @@ def step_click_floating_button(context, text):
 
 @when('I change the name to "{name}"')
 def step_change_name(context, name):
+    _wait(context).until(
+        EC.presence_of_element_located((By.NAME, "name"))
+    )
     context.browser.fill("name", name)
 
 
@@ -350,3 +353,33 @@ def step_must_confirm(context):
 def step_see_text(context, text):
     assert context.browser.is_text_present(text, wait_time=3), \
         f'Text "{text}" not found'
+
+@given("a subject owned by another user exists")
+def step_subject_other_user(context):
+    other_user, _ = User.objects.get_or_create(
+        username="other_user",
+        defaults={"email": "other@example.com"}
+    )
+    other_user.set_password("OtherPass123!")
+    other_user.save()
+    subject = Subject.objects.create(
+        name="Other user's subject",
+        user_id=other_user,
+        description="Test",
+        color="#7d9b76",
+    )
+    context.other_subject = subject
+
+
+@when("I navigate to that subject's URL")
+def step_navigate_to_other_subject(context):
+    context.browser.visit(
+        f"{context.base_url}/subjects/{context.other_subject.subject_id}"
+    )
+
+
+@then("I see a 404 page")
+def step_see_404(context):
+    assert context.browser.is_text_present("404", wait_time=3) or \
+           context.browser.is_text_present("Not Found", wait_time=1), \
+        "Expected 404 page not found"
