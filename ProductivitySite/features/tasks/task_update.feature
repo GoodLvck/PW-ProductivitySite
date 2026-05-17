@@ -9,7 +9,7 @@ Feature: Edit and complete tasks
     And I am on the detail of task "Submit chapter 3 problems"
 
   Scenario: Edit task fields
-    When I click "Edit"
+    When I click the floating "Edit" button
     And I change the name to "Submit chapter 3 and 4 problems"
     And I change the estimated time to 120
     And I change the priority to "medium"
@@ -29,7 +29,7 @@ Feature: Edit and complete tasks
     Then it moves back to the pending section
 
   Scenario: Edit is cancelled without saving
-    When I click "Edit"
+    When I click the floating "Edit" button
     And I change the name to "Something else"
     And I click "Cancel"
     Then the original task name is still displayed

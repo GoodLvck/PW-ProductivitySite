@@ -252,6 +252,7 @@ def step_see_message(context, message):
         "Email is already in use": "A user with that username already exists.",
         "Password must be at least 8 characters": "This password is too short.",
         "Name is required": "This field is required.",
+        "No tasks yet. Create your first one!": "NO PENDING TASKS!!",
     }
 
     if message in required_messages:

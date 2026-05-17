@@ -9,14 +9,14 @@ Feature: Delete task
     And I am on the detail of task "Submit chapter 3 problems"
 
   Scenario: Confirmed deletion
-    When I click "Edit"
-    And I click "Delete task"
+    When I click the floating "Edit" button
+    And I click "Delete"
     And I confirm the deletion
     Then I am returned to the subject detail page
     And the task no longer appears in the list
 
   Scenario: Cancel deletion
-    When I click "Edit"
-    And I click "Delete task"
+    When I click the floating "Edit" button
+    And I click "Delete"
     And I cancel the confirmation
     Then the task still exists
