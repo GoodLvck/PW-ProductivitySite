@@ -60,22 +60,14 @@ def chrome_browser(headless=True):
 
 
 def firefox_browser(headless=True):
-    from selenium.webdriver.firefox.options import Options
-    firefox_options = Options()
-    if headless:
-        firefox_options.add_argument("-headless")
-    return Browser("firefox", options=firefox_options)
-
+    return Browser("firefox", headless=headless)
 # ---------------------------------------------------------------------------
 # Behave hooks
 # ---------------------------------------------------------------------------
 
 def before_all(context):
-    context.browser = firefox_browser(headless=True)
-    if BROWSER == "chrome":
-        context.browser = chrome_browser(headless=HEADLESS)
-    else:
-        context.browser = firefox_browser(headless=HEADLESS)
+    context.browser = firefox_browser(headless=HEADLESS)
+
     # Alternatively, use `firefox_browser` and headless=False to see the browser while testing
     context.base_url = BASE_URL
     context.test_user = TEST_USER
@@ -120,5 +112,10 @@ def after_step(context, step):
         context.browser.driver.save_screenshot(filename)
 
 def before_scenario(context, scenario):
+    from django.contrib.auth.models import User
+    from productivity_site.models import Subject
     User.objects.filter(username="ana").delete()
+    user = User.objects.filter(username="testuser").first()
+    if user:
+        Subject.objects.filter(user_id=user).delete()
     context.browser.visit(f"{context.base_url}/logout/")
