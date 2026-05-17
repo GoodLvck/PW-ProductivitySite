@@ -18,6 +18,19 @@ from django.conf import settings
 from .models import Subject, Task, subject, Subtask
 
 
+def _subtask_list_context(task, subject):
+    subtasks = Subtask.objects.filter(
+        task_id=task,
+    ).order_by("completed", "due_date")
+
+    return {
+        "task": task,
+        "subject": subject,
+        "subtasks": subtasks,
+        "pending_subtasks": subtasks.filter(completed=False),
+    }
+
+
 # ------------------ Landing page ------------------------
 def home(request):
     if request.user.is_authenticated:
@@ -282,15 +295,9 @@ def task_read(request, subject_id, task_id):
     task = get_object_or_404(Task, pk=task_id, subject_id=subject_id)
     subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
 
-    subtasks = Subtask.objects.filter(
-        task_id=task,
-    )
+    context = _subtask_list_context(task, subject);
 
-    return render(request, "authorized/tasks/task_view.html", {
-        "task": task,
-        "subject": subject,
-        "subtasks": subtasks,
-    })
+    return render(request, "authorized/tasks/task_view.html", context)
 
 @login_required
 def task_update(request, subject_id, task_id):
@@ -428,6 +435,35 @@ def subtask_update(request, subject_id, task_id, subtask_id):
         "submit_label": "Save changes",
         "cancel_url": reverse("productivity_site:subtask_read", args=[subject_id, task_id, subtask.subtask_id]),
     })
+
+@login_required
+def subtask_toggle_completed(request, subject_id, task_id, subtask_id):
+    subtask = get_object_or_404(
+        Subtask,
+        subtask_id=subtask_id,
+        task_id__task_id=task_id,
+        task_id__subject_id__subject_id=subject_id,
+        task_id__subject_id__user_id=request.user,
+    )
+
+    if request.method == "POST":
+        subtask.completed = not subtask.completed
+        subtask.save(update_fields=["completed"])
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        task = subtask.task_id
+        subject = task.subject_id
+        return render(
+            request,
+            "authorized/tasks/_subtask_list.html",
+            _subtask_list_context(task, subject),
+        )
+
+    return redirect(
+        "productivity_site:task_read",
+        subject_id=subject_id,
+        task_id=task_id,
+    )
 
 @login_required
 def subtask_delete(request, subject_id, task_id, subtask_id):
