@@ -108,6 +108,7 @@ def step_fill_in(context, field, value):
     field_map = {
         "Name": "name",
         "Description": "description",
+        "Task description": "text",
     }
     name = field_map.get(field, field.lower())
     context.browser.fill(name, value)
