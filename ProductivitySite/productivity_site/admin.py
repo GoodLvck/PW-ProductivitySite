@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from productivity_site.models import *
 
 
