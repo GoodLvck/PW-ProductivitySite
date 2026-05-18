@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from productivity_site.models import Subject, Task, Subtask
 
@@ -30,6 +31,24 @@ class ContactForm(forms.Form):
         return email
 
 class SubjectForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.instance.user_id = user
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not self.user:
+            return name
+
+        duplicate = Subject.objects.filter(user_id=self.user, name__iexact=name)
+        if self.instance.pk:
+            duplicate = duplicate.exclude(pk=self.instance.pk)
+        if duplicate.exists():
+            raise forms.ValidationError("A subject with that name already exists")
+        return name
+
     class Meta:
         model = Subject
         fields = ["name", "description", "color"]
@@ -57,6 +76,36 @@ class SubjectForm(forms.ModelForm):
         }
 
 class TaskForm(forms.ModelForm):
+    def __init__(self, *args, subject=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.subject = subject
+        if subject is not None:
+            self.instance.subject_id = subject
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not self.subject:
+            return name
+
+        duplicate = Task.objects.filter(subject_id=self.subject, name__iexact=name)
+        if self.instance.pk:
+            duplicate = duplicate.exclude(pk=self.instance.pk)
+        if duplicate.exists():
+            raise forms.ValidationError("A task with that name already exists")
+        return name
+
+    def clean_due_date(self):
+        due_date = self.cleaned_data["due_date"]
+        if due_date < timezone.now():
+            raise forms.ValidationError("Due date cannot be in the past")
+        return due_date
+
+    def clean_estimated_time(self):
+        estimated_time = self.cleaned_data["estimated_time"]
+        if estimated_time <= 0:
+            raise forms.ValidationError("Estimated time must be greater than 0")
+        return estimated_time
+
     class Meta:
         model = Task
         fields = ["name", "text", "due_date", "priority", "estimated_time"]
@@ -78,6 +127,38 @@ class TaskForm(forms.ModelForm):
         }
 
 class SubtaskForm(forms.ModelForm):
+    def __init__(self, *args, task=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.task = task
+        if task is not None:
+            self.instance.task_id = task
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not self.task:
+            return name
+
+        duplicate = Subtask.objects.filter(task_id=self.task, name__iexact=name)
+        if self.instance.pk:
+            duplicate = duplicate.exclude(pk=self.instance.pk)
+        if duplicate.exists():
+            raise forms.ValidationError("A subtask with that name already exists")
+        return name
+
+    def clean_due_date(self):
+        due_date = self.cleaned_data["due_date"]
+        if due_date < timezone.now():
+            raise forms.ValidationError("Due date cannot be in the past")
+        if self.task and due_date > self.task.due_date:
+            raise forms.ValidationError("Subtask due date cannot be after the task due date")
+        return due_date
+
+    def clean_estimated_time(self):
+        estimated_time = self.cleaned_data["estimated_time"]
+        if estimated_time <= 0:
+            raise forms.ValidationError("Estimated time must be greater than 0")
+        return estimated_time
+
     class Meta:
         model = Subtask
         fields = ["name", "description", "due_date", "priority", "estimated_time"]

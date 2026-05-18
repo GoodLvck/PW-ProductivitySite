@@ -207,7 +207,7 @@ def subjects(request):
 @login_required
 def subject_create(request):
     if request.method == "POST":
-        form = SubjectForm(request.POST)
+        form = SubjectForm(request.POST, user=request.user)
 
         if form.is_valid():
             subject = form.save(commit=False)
@@ -215,7 +215,7 @@ def subject_create(request):
             subject.save()
             return redirect("productivity_site:subjects")
     else:
-        form = SubjectForm()
+        form = SubjectForm(user=request.user)
 
     return render(request, "authorized/create.html", {
         "form": form,
@@ -281,12 +281,12 @@ def subject_update(request, subject_id):
     )
 
     if request.method == "POST":
-        form = SubjectForm(request.POST, instance=subject)
+        form = SubjectForm(request.POST, instance=subject, user=request.user)
         if form.is_valid():
             form.save()
             return redirect("productivity_site:subject_read", subject_id=subject.subject_id)
     else:
-        form = SubjectForm(instance=subject)
+        form = SubjectForm(instance=subject, user=request.user)
 
     return render(request, "authorized/create.html", {
         "form": form,
@@ -320,7 +320,7 @@ def task_create(request, subject_id):
     subject = get_object_or_404(Subject, pk=subject_id, user_id=request.user)
 
     if request.method == "POST":
-        form = TaskForm(request.POST)
+        form = TaskForm(request.POST, subject=subject)
 
         if form.is_valid():
             task = form.save(commit=False)
@@ -332,7 +332,7 @@ def task_create(request, subject_id):
                 subject_id=subject.subject_id,
             )
     else:
-        form = TaskForm()
+        form = TaskForm(subject=subject)
 
     return render(request, "authorized/create.html", {
         "form": form,
@@ -364,7 +364,7 @@ def task_update(request, subject_id, task_id):
     )
 
     if request.method == "POST":
-        form = TaskForm(request.POST, instance=task)
+        form = TaskForm(request.POST, instance=task, subject=task.subject_id)
         if form.is_valid():
             form.save()
             return redirect(
@@ -373,7 +373,7 @@ def task_update(request, subject_id, task_id):
                 task_id=task.task_id,
             )
     else:
-        form = TaskForm(instance=task)
+        form = TaskForm(instance=task, subject=task.subject_id)
 
     return render(request, "authorized/create.html", {
         "form": form,
@@ -415,7 +415,7 @@ def subtask_create(request, subject_id, task_id):
     )
 
     if request.method == "POST":
-        form = SubtaskForm(request.POST)
+        form = SubtaskForm(request.POST, task=task)
 
         if form.is_valid():
             subtask = form.save(commit=False)
@@ -432,7 +432,7 @@ def subtask_create(request, subject_id, task_id):
                 task_id=task.task_id,
             )
     else:
-        form = SubtaskForm()
+        form = SubtaskForm(task=task)
 
     return render(request, "authorized/create.html", {
         "form": form,
@@ -475,7 +475,7 @@ def subtask_update(request, subject_id, task_id, subtask_id):
     )
 
     if request.method == "POST":
-        form = SubtaskForm(request.POST, instance=subtask)
+        form = SubtaskForm(request.POST, instance=subtask, task=subtask.task_id)
         if form.is_valid():
             form.save()
             return redirect(
@@ -485,7 +485,7 @@ def subtask_update(request, subject_id, task_id, subtask_id):
                 subtask_id=subtask.subtask_id,
             )
     else:
-        form = SubtaskForm(instance=subtask)
+        form = SubtaskForm(instance=subtask, task=subtask.task_id)
 
     return render(request, "authorized/create.html", {
         "form": form,

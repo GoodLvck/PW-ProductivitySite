@@ -7,6 +7,11 @@ document.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
+    const button = form.querySelector(".subtask-toggle-icon");
+    if (button) {
+        button.disabled = true;
+    }
+
     try {
         const response = await fetch(form.action, {
             method: "POST",
@@ -45,5 +50,9 @@ document.addEventListener("submit", async (event) => {
         }
     } catch {
         form.submit();
+    } finally {
+        if (button) {
+            button.disabled = false;
+        }
     }
 });
