@@ -10,7 +10,8 @@
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     background-color: var(--background);
     padding: .5rem;
     outline: none;
@@ -18,6 +19,68 @@
     border-radius: 10px;
     box-sizing: border-box;
     width: 100%;
+    color: var(--foreground);
+}
+
+.form-group input[type="color"] {
+    min-height: 2.75rem;
+    padding: .25rem;
+    cursor: pointer;
+}
+
+.form-group select {
+    min-height: 2.5rem;
+    cursor: pointer;
+}
+
+.form-group input[type="datetime-local"] {
+    min-height: 2.5rem;
+    cursor: pointer;
+    padding-right: .75rem;
+    font-family: var(--font-body), sans-serif;
+    color-scheme: light;
+}
+
+.form-group input[type="datetime-local"]::-webkit-datetime-edit {
+    color: var(--foreground);
+}
+
+.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    padding: .25rem;
+    border-radius: 8px;
+    background-color: var(--muted);
+    cursor: pointer;
+    opacity: 1;
+}
+
+.form-group:has(.datetime-field)::after {
+    content: "Select date and time";
+    color: var(--muted-foreground);
+    font-size: smaller;
+    font-weight: lighter;
+}
+
+.form-group input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.form-group input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 8px;
+}
+
+.form-group input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 8px;
+}
+
+[data-theme="dark"] .form-group input[type="datetime-local"] {
+    color-scheme: dark;
+}
+
+[data-theme="dark"] .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    background-color: var(--muted);
+    filter: invert(1) brightness(1.5);
 }
 
 .form-group input::placeholder,

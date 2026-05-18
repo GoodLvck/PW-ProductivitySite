@@ -1,0 +1,29 @@
+{% extends "authorized/base_authorized.html" %}
+
+{% block title %}{{ form_title }}{% endblock %}
+
+{% block page_content %}
+    <div class="create-layout">
+        <div class="create-header">
+            <div>
+                <h1 class="app-title">{{ form_title }}</h1>
+                <p class="app-subtitle">{{ form_subtitle }}</p>
+            </div>
+
+        </div>
+
+        <form method="post" class="create-form card">
+            {% csrf_token %}
+
+            {% include "components/forms/_form_fields.html" %}
+
+            <div class="create-actions">
+                <a href="{{ cancel_url }}" class="button button-secondary">
+                    Cancel
+                </a>
+
+                {% include "components/button/submit-button-primary.html" with text=submit_label %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

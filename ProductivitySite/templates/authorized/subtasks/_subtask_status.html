@@ -1,0 +1,26 @@
+<form method="post"
+      action="{% url 'productivity_site:subtask_toggle_completed' subject.subject_id task.task_id subtask.subtask_id %}"
+      class="subtask-status-form">
+    {% csrf_token %}
+    <button type="submit"
+            class="subtask-status-card card{% if subtask.completed %} is-completed{% endif %}"
+            style="border-left: .25rem solid {{ subject.color }}">
+        <span class="subtask-status-icon">
+            {% if subtask.completed %}
+                <i class="fi fi-rr-check-circle"></i>
+            {% else %}
+                <i class="fi fi-rr-circle"></i>
+            {% endif %}
+        </span>
+        <span class="subtask-status-texts">
+            <span class="subtask-status-title">
+                {% if subtask.completed %}
+                    Completed
+                {% else %}
+                    Pending
+                {% endif %}
+            </span>
+            <span class="subtask-status-subtitle">Tap to change status</span>
+        </span>
+    </button>
+</form>

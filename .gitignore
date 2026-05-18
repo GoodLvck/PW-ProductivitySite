@@ -3,6 +3,4 @@
 .env
 .env.*
 !.env.example
-db.sqlite3
-ProductivitySite/db.sqlite3
 __pycache__
