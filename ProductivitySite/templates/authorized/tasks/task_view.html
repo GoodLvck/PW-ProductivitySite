@@ -1,0 +1,82 @@
+{% extends "authorized/base_authorized.html" %}
+{% load static %}
+
+{% block title %} Subjects {% endblock %}
+
+{% block page_content %}
+    <div class="details-layout">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{% url 'productivity_site:subjects' %}">Subjects</a>
+            <i class="fi fi-rr-angle-small-right"></i>
+            <a href="{% url 'productivity_site:subject_read' subject.subject_id %}">{{ subject.name }}</a>
+            <i class="fi fi-rr-angle-small-right"></i>
+            <span style="color: {{ subject.color }}">{{ task.name }}</span>
+        </div>
+
+        <!-- Header -->
+        <div class="details-header">
+            <h1>{{ task.name }}</h1>
+            <p>{{ task.text }}</p>
+        </div>
+
+        <div class="task-details-cards">
+            <!-- Task status -->
+            <div id="task-status-container">
+                {% include "authorized/tasks/_task_status.html" %}
+            </div>
+
+            <!-- Task details card -->
+            <div class="task-details-card card"
+                 style="border-left: .25rem solid {{ subject.color }}">
+                <p>{{ task.text }}</p>
+                <div class="task-details-card-meta">
+                    <div class="task-details-card-meta-item">
+                        <i class="fi fi-rr-clock-five"></i>
+                        <span>{{ task.estimated_time }} min</span>
+                    </div>
+                    <div class="task-details-card-meta-item">
+                        <span class="task-details-meta-label">Due date:</span>
+                        <span class="task-details-meta-text">{{ task.due_date | date:"j M" }}</span>
+                    </div>
+                    <div class="task-details-card-meta-item">
+                        <span class="task-details-meta-label">Priority:</span>
+                        <div class="priority-badge priority-badge-{{ task.priority }}">
+                            <span>{{ task.priority }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subtasks listing -->
+        {% include "authorized/tasks/_subtask_list.html" %}
+    </div>
+
+    {% url 'productivity_site:task_update' subject.subject_id task.task_id as edit_url %}
+    {% url 'productivity_site:task_delete' subject.subject_id task.task_id as delete_url %}
+    {% include "components/actions/floating_actions.html" with edit_url=edit_url delete_url=delete_url object_type="task" object_name=task.name delete_warning="Deleting this task will also delete its subtasks." %}
+
+    <div id="task-complete-confirmation" class="delete-popover" popover>
+        <h3>Complete task</h3>
+        <p>Are you sure you want to complete this task?</p>
+        <p id="task-complete-confirmation-message" class="delete-warning"></p>
+
+        <div class="delete-popover-actions">
+            <button type="button"
+                    class="button button-secondary"
+                    popovertarget="task-complete-confirmation"
+                    popovertargetaction="hide">
+                Cancel
+            </button>
+            <button type="button"
+                    id="task-complete-confirmation-submit"
+                    class="button button-primary">
+                Complete
+            </button>
+        </div>
+    </div>
+
+    <script src="{% static 'js/subtasks.js' %}"></script>
+    <script src="{% static 'js/tasks.js' %}"></script>
+{% endblock %}

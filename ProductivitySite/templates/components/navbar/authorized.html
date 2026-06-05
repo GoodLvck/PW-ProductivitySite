@@ -1,10 +1,26 @@
+<script>
+    const darkStored = localStorage.getItem('theme') === 'dark';
+
+    if (darkStored) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+</script>
+{% load static %}
 <div class="app-navbar-buttons">
-    <span class="button app-navbar-button">
-        <i class="fi fi-rc-moon"></i>
-        <p>Dark theme</p>
+
+    <span class="button app-navbar-button" id="theme-toggle">
+        <i class="fi" id="theme-icon"></i>
+        <p id="theme-label"></p>
     </span>
-    <span class="button app-navbar-button">
-        <i class="fi fi-rc-volume-mute"></i>
-        <p>Lofi live</p>
+
+    <span class="button app-navbar-button" id="musicButton">
+        <i class="fi fi-rc-volume-mute" id="musicIcon"></i>
+        <p id="musicLabel">Loading...</p>
     </span>
 </div>
+<script src="{% static 'js/dark-mode.js' %}"></script>
+
+<div id="youtube-player"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="{% static 'js/player.js' %}"></script>

@@ -138,6 +138,94 @@ python manage.py runserver
 
 La aplicacion quedara disponible en [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
+## Tests E2E (Behave + Splinter)
+
+Los tests de extremo a extremo usan [Behave](https://behave.readthedocs.io/) y [Splinter](https://splinter.readthedocs.io/) para verificar el comportamiento de la aplicacion desde el navegador.
+
+### Requisitos previos
+
+Ademas del entorno virtual con las dependencias del proyecto, necesitas un navegador y su driver:
+
+**Firefox (por defecto):**
+
+```bash
+# macOS
+brew install geckodriver
+
+# Ubuntu/Debian
+sudo apt-get install firefox geckodriver
+```
+
+**Chrome (alternativa):**
+
+```bash
+# macOS
+brew install chromedriver
+
+# Ubuntu/Debian
+sudo apt-get install chromium-driver
+```
+
+### Ejecutar los tests
+
+Asegurate de que el servidor de desarrollo esta corriendo en otra terminal:
+
+```bash
+cd ProductivitySite
+python manage.py runserver
+```
+
+Luego, desde `ProductivitySite/`, ejecuta todos los tests:
+
+```bash
+behave
+```
+
+Para ejecutar solo una carpeta de features:
+
+```bash
+behave features/subjects/
+behave features/tasks/
+behave features/subtasks/
+behave features/auth/
+behave features/authorization/
+```
+
+Para ejecutar un feature concreto:
+
+```bash
+behave features/subjects/create_subject.feature
+```
+
+### Variables de entorno para los tests
+
+| Variable | Valor por defecto | Descripcion |
+|---|---|---|
+| `TEST_SERVER_URL` | `http://localhost:8000` | URL base del servidor a testear |
+| `BROWSER` | `firefox` | Navegador a usar (`firefox` o `chrome`) |
+| `HEADLESS` | `true` | Ejecutar sin interfaz grafica (`true` o `false`) |
+
+Ejemplo para ver el navegador mientras corren los tests:
+
+```bash
+HEADLESS=false behave features/subjects/create_subject.feature
+```
+
+### Estructura de los tests
+
+```
+features/
+├── auth/           # Registro de usuario y validaciones de login
+├── authorization/  # Control de acceso entre usuarios
+├── subjects/       # CRUD de asignaturas
+├── tasks/          # CRUD de tareas
+├── subtasks/       # CRUD de subtareas
+├── steps/          # Implementacion de los steps (Python)
+└── environment.py  # Configuracion global (browser, hooks, usuario de prueba)
+```
+
+El usuario de prueba (`testuser` / `TestPass123!`) se crea automaticamente antes de la suite si no existe. Antes de cada escenario se elimina toda la informacion que ese usuario pudiera tener de ejecuciones anteriores, garantizando el aislamiento entre tests.
+
 ## Ejecucion con Docker Compose
 
 Desde la raiz del repositorio:
@@ -259,6 +347,18 @@ docker compose up -d
 ```bash
 docker compose logs -f
 ```
+
+## Usuarios de prueba
+
+La aplicacion incluye una serie de usuarios de prueba para facilitar el desarrollo y la evaluacion. Estos usuarios se crean manualmente o mediante los fixtures del proyecto.
+
+| Usuario | Contrasena | Rol |
+|---|---|---|
+| `admin` | `admin1234` | Superusuario con acceso al panel de administracion de Django |
+| `alba` | `alba.1234` | Usuario registrado con datos de ejemplo |
+| `testuser` | `TestPass123!` | Usuario usado automaticamente por la suite de tests E2E |
+
+El usuario `testuser` lo crea la suite de tests antes de ejecutar los escenarios si no existe previamente. Sus datos (asignaturas, tareas y subtareas) se limpian antes de cada escenario para garantizar el aislamiento entre tests, asi que no es necesario gestionarlo a mano.
 
 ## Notas
 

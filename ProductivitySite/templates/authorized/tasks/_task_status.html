@@ -1,0 +1,28 @@
+<form method="post"
+      action="{% url 'productivity_site:task_toggle_completed' subject.subject_id task.task_id %}"
+      id="task-status"
+      class="task-status-form task-toggle-form"
+      {% if not task.completed and task.pending_subtasks_count > 0 %}data-confirm-message="This task still has {{ task.pending_subtasks_count }} incomplete subtask{{ task.pending_subtasks_count|pluralize }}. If you confirm, all subtasks will be marked as completed."{% endif %}>
+    {% csrf_token %}
+    <button type="submit"
+            class="task-status-card card{% if task.completed %} is-completed{% endif %}"
+            style="border-left: .25rem solid {{ subject.color }}">
+        <span class="task-status-icon">
+            {% if task.completed %}
+                <i class="fi fi-rr-check-circle"></i>
+            {% else %}
+                <i class="fi fi-rr-circle"></i>
+            {% endif %}
+        </span>
+        <span class="task-status-texts">
+            <span class="task-status-title">
+                {% if task.completed %}
+                    Completed
+                {% else %}
+                    Pending
+                {% endif %}
+            </span>
+            <span class="task-status-subtitle">Tap to change status</span>
+        </span>
+    </button>
+</form>

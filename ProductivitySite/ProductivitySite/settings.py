@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'productivity_site.apps.ProductivitySiteConfig',
+    'behave_django',
 ]
 
 MIDDLEWARE = [

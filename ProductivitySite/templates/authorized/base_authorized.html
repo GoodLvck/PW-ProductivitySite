@@ -12,4 +12,25 @@
             {% block page_content %}{% endblock %}
         </div>
     </div>
+
+    <script>
+        const appLayout = document.querySelector(".app-layout");
+        const sidebarCollapseButton = document.getElementById("sidebar-collapse-button");
+
+        if (localStorage.getItem("sidebar-collapsed") === "true") {
+            appLayout?.classList.add("sidebar-collapsed");
+        }
+
+        sidebarCollapseButton?.addEventListener("click", () => {
+            appLayout.classList.toggle("sidebar-collapsed");
+            document.documentElement.classList.toggle(
+                "sidebar-collapsed-pref",
+                appLayout.classList.contains("sidebar-collapsed")
+            );
+            localStorage.setItem(
+                "sidebar-collapsed",
+                appLayout.classList.contains("sidebar-collapsed")
+            );
+        });
+    </script>
 {% endblock %}
