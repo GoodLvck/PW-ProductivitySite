@@ -13,14 +13,9 @@
         <p id="theme-label"></p>
     </span>
 
-    <span class="button app-navbar-button" id="musicButton">
+    <span class="button app-navbar-button" id="musicButton" role="button" tabindex="0" aria-pressed="false" aria-label="Toggle lofi music">
         <i class="fi fi-rc-volume-mute" id="musicIcon"></i>
-        <p id="musicLabel">Loading...</p>
+        <p id="musicLabel">Lofi live</p>
     </span>
 </div>
 <script src="{% static 'js/dark-mode.js' %}"></script>
-
-<div id="youtube-player"></div>
-
-<script src="https://www.youtube.com/iframe_api"></script>
-<script src="{% static 'js/player.js' %}"></script>

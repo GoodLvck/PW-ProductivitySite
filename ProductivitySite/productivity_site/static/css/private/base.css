@@ -166,6 +166,20 @@
     font-weight: lighter;
 }
 
+#music-player-shell {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0.01;
+    pointer-events: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
 .app-navbar-button:hover {
     color: var(--foreground);
     background-color: var(--muted);
