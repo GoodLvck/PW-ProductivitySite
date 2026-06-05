@@ -4,20 +4,36 @@
 {% block title %} Subjects {% endblock %}
 
 {% block page_content %}
-    <div class="details-layout">
+    <div class="details-layout"
+         vocab="https://schema.org/"
+         typeof="Action"
+         resource="{{ request.build_absolute_uri }}">
+        <link property="url mainEntityOfPage" href="{{ request.build_absolute_uri }}">
+        <meta property="identifier" content="task-{{ task.task_id }}">
+        {% if task.completed %}
+            <link property="actionStatus" href="https://schema.org/CompletedActionStatus">
+        {% else %}
+            <link property="actionStatus" href="https://schema.org/PotentialActionStatus">
+        {% endif %}
+
         <!-- Breadcrumb -->
         <div class="breadcrumb">
             <a href="{% url 'productivity_site:subjects' %}">Subjects</a>
             <i class="fi fi-rr-angle-small-right"></i>
-            <a href="{% url 'productivity_site:subject_read' subject.subject_id %}">{{ subject.name }}</a>
+            <a href="{% url 'productivity_site:subject_read' subject.subject_id %}"
+               property="object"
+               typeof="Course"
+               resource="{% url 'productivity_site:subject_read' subject.subject_id %}">
+                <span property="name">{{ subject.name }}</span>
+            </a>
             <i class="fi fi-rr-angle-small-right"></i>
             <span style="color: {{ subject.color }}">{{ task.name }}</span>
         </div>
 
         <!-- Header -->
         <div class="details-header">
-            <h1>{{ task.name }}</h1>
-            <p>{{ task.text }}</p>
+            <h1 property="name">{{ task.name }}</h1>
+            <p property="description">{{ task.text }}</p>
         </div>
 
         <div class="task-details-cards">
@@ -37,12 +53,16 @@
                     </div>
                     <div class="task-details-card-meta-item">
                         <span class="task-details-meta-label">Due date:</span>
-                        <span class="task-details-meta-text">{{ task.due_date | date:"j M" }}</span>
+                        <time class="task-details-meta-text"
+                              property="endTime"
+                              datetime="{{ task.due_date|date:'c' }}">
+                            {{ task.due_date | date:"j M" }}
+                        </time>
                     </div>
                     <div class="task-details-card-meta-item">
                         <span class="task-details-meta-label">Priority:</span>
                         <div class="priority-badge priority-badge-{{ task.priority }}">
-                            <span>{{ task.priority }}</span>
+                            <span property="disambiguatingDescription">{{ task.priority }}</span>
                         </div>
                     </div>
                 </div>
@@ -50,7 +70,12 @@
         </div>
 
         <!-- Subtasks listing -->
-        {% include "authorized/tasks/_subtask_list.html" %}
+        <div property="result" typeof="ItemList">
+            <meta property="name" content="Subtasks for {{ task.name }}">
+            <meta property="numberOfItems" content="{{ subtasks|length }}">
+            <link property="itemListOrder" href="https://schema.org/ItemListOrderAscending">
+            {% include "authorized/tasks/_subtask_list.html" %}
+        </div>
     </div>
 
     {% url 'productivity_site:task_update' subject.subject_id task.task_id as edit_url %}
