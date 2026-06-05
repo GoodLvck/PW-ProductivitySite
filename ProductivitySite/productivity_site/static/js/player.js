@@ -8,7 +8,7 @@
     const MUSIC_STATE_KEY = 'music';
     const MUSIC_VOLUME_KEY = 'music_volume';
     const DEFAULT_VOLUME = 70;
-    const STREAM_URL = 'https://dc1.serverse.com/proxy/dnutqhxl/stream';
+    const STREAM_URL = 'https://streaming.audiplay.cl:8130/radio.mp3';
 
     const parsedVolume = Number.parseInt(
         localStorage.getItem(MUSIC_VOLUME_KEY) || `${DEFAULT_VOLUME}`,
