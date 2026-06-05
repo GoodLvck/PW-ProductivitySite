@@ -1,6 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block templateBody %}
+    <div id="music-player-shell" data-turbo-permanent>
+        <div id="music-player-mount"></div>
+    </div>
+
     <div class="app-layout">
         <div class="app-sidebar">
             {% include "components/sidebar/sidebar.html" %}
@@ -33,4 +38,7 @@
             );
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8/dist/turbo.es2017-esm.js" type="module"></script>
+    <script src="{% static 'js/player.js' %}"></script>
 {% endblock %}

@@ -12,7 +12,10 @@
     <!-- Subtasks -->
     {% for subtask in subtasks %}
         {% if not subtask.completed %}
-            <div class="subtask-card subtask-card-pending card">
+            <div class="subtask-card subtask-card-pending card"
+                 property="itemListElement"
+                 typeof="ListItem">
+                <meta property="position" content="{{ forloop.counter }}">
                 <form method="post"
                       action="{% url 'productivity_site:subtask_toggle_completed' subject.subject_id task.task_id subtask.subtask_id %}"
                       class="subtask-toggle-form">
@@ -22,22 +25,32 @@
                     </button>
                 </form>
                 <a href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}"
-                   class="subtask-card-content">
+                   class="subtask-card-content"
+                   property="item"
+                   typeof="Action"
+                   resource="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}">
+                    <link property="url" href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}">
+                    <meta property="identifier" content="subtask-{{ subtask.subtask_id }}">
+                    <link property="actionStatus" href="https://schema.org/PotentialActionStatus">
                     <div class="subtask-card-texts">
-                        <p class="subtask-card-name">{{ subtask.name }}</p>
+                        <p class="subtask-card-name" property="name">{{ subtask.name }}</p>
+                        <meta property="description" content="{{ subtask.description }}">
                         <div class="subtask-card-time">
                             <i class="fi fi-rr-clock-five"></i>
                             <span>{{ subtask.estimated_time }} min</span>
                         </div>
                     </div>
                     <div class="priority-badge priority-badge-{{ subtask.priority }}">
-                        <span>{{ subtask.priority }}</span>
+                        <span property="disambiguatingDescription">{{ subtask.priority }}</span>
                     </div>
                     <i class="fi fi-rr-angle-small-right"></i>
                 </a>
             </div>
         {% else %}
-            <div class="subtask-card subtask-card-completed card">
+            <div class="subtask-card subtask-card-completed card"
+                 property="itemListElement"
+                 typeof="ListItem">
+                <meta property="position" content="{{ forloop.counter }}">
                 <form method="post"
                       action="{% url 'productivity_site:subtask_toggle_completed' subject.subject_id task.task_id subtask.subtask_id %}"
                       class="subtask-toggle-form">
@@ -47,16 +60,23 @@
                     </button>
                 </form>
                 <a href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}"
-                   class="subtask-card-content">
+                   class="subtask-card-content"
+                   property="item"
+                   typeof="Action"
+                   resource="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}">
+                    <link property="url" href="{% url 'productivity_site:subtask_read' subject.subject_id task.task_id subtask.subtask_id %}">
+                    <meta property="identifier" content="subtask-{{ subtask.subtask_id }}">
+                    <link property="actionStatus" href="https://schema.org/CompletedActionStatus">
                     <div class="subtask-card-texts">
-                        <p class="subtask-card-name">{{ subtask.name }}</p>
+                        <p class="subtask-card-name" property="name">{{ subtask.name }}</p>
+                        <meta property="description" content="{{ subtask.description }}">
                         <div class="subtask-card-time">
                             <i class="fi fi-rr-clock-five"></i>
                             <span>{{ subtask.estimated_time }} min</span>
                         </div>
                     </div>
                     <div class="priority-badge priority-badge-{{ subtask.priority }}">
-                        <span>{{ subtask.priority }}</span>
+                        <span property="disambiguatingDescription">{{ subtask.priority }}</span>
                     </div>
                     <i class="fi fi-rr-angle-small-right"></i>
                 </a>
